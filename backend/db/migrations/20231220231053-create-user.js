@@ -1,13 +1,13 @@
 'use strict';
-// require('dotenv').config()
+require('dotenv').config()
 
-// let options = {};
+let options = {};
 
-// if (process.env.NODE_ENV === 'production') {
-//   options.schema = process.env.SCHEMA;  // define your schema in options object
-// }
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 
-const { SELECT } = require('sequelize/types/query-types');
+// const { SELECT } = require('sequelize/types/query-types');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -43,10 +43,10 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIME')
       }
-    });
+    }, options);
   },
   async down(queryInterface, Sequelize) {
-    // options.tableName = 'Users'
-    await queryInterface.dropTable('Users'); //may want to await this
+    options.tableName = 'Users'
+    return queryInterface.dropTable('Users'); //may want to await this
   }
 };
