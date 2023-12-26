@@ -8,11 +8,13 @@ if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
 
+options.tableName = 'Users'
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
    
-      await User.bulkCreate([
+      await queryInterface.bulkInsert(options, [
         {
           username: 'Bukayo-7',
           email: 'bukayo_saka@user.io',
@@ -35,7 +37,7 @@ module.exports = {
           lastName: 'Saliba'
         },
 
-      ], { validate: true })
+      ], {}) //{ validate: true } <-- maybe include validations
   },
 
   async down (queryInterface, Sequelize) {
