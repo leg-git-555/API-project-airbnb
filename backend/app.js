@@ -11,7 +11,7 @@ const isProduction = environment === 'production';
 
 const { ValidationError } = require('sequelize'); //added in phase2
 
-
+const { Spot } = require('./db/models')
 
 
 const app = express();
