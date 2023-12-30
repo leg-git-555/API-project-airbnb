@@ -20,7 +20,12 @@ module.exports = {
       },
       ownerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
+        onDelete: 'cascade'
       },
       address: {
         type: Sequelize.STRING,
@@ -51,6 +56,10 @@ module.exports = {
       },
       price: {
         type: Sequelize.DECIMAL,
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING,
         allowNull: false
       },
       createdAt: {
