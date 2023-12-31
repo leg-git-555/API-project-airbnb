@@ -7,7 +7,3 @@ module.exports = {
       expiresIn: process.env.JWT_SECRET_EXPIRES_IN
     }
   };
-
-//removing comment
-
-//having trouble with basic git
