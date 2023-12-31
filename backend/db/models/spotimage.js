@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     url: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     preview: {
