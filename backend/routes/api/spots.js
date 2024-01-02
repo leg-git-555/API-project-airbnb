@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
             where: {
                 preview: true
             },
-            attributes: ['url'],
+            attributes: ['url']
         }
     })
 
@@ -57,19 +57,55 @@ router.get('/current', requireAuth,  async (req, res) => {
         where: {
             ownerId: id
         }, 
+        include: {
+            model: SpotImage,
+            where: {
+                preview: true
+            },
+            attributes: ['url'],
+        }
     })
 
     let userSpotsB = userSpots.map(spot => spot.toJSON())
 
-    console.log(userSpotsB)
-
     for (let spot of userSpotsB) {
-        console.log(spot) //add avg score in here 
-        spot.testKey = 'test value'
+        let count = await Review.count({
+            where: {
+                spotId: spot.id
+            } 
+        })
+
+        let avgRating = await Review.sum('stars', {
+            where: {
+                spotId: spot.id
+            }
+        })
+
+            avgRating = avgRating/count
+            spot.avgRating = avgRating
+
+            spot.previewImage = spot.SpotImages[0].url
+            delete spot.SpotImages
     }
 
 
     return res.json(userSpotsB)
+})
+
+router.get('/:spotId', async (req, res) => {
+    let id = req.params.spotId
+        id = parseInt(id)
+
+    let spot = await Spot.findByPk(1, {
+        include: [{
+            model: SpotImage,
+            where: {
+                spotId: id
+            }
+        }]
+    })
+
+    res.json(spot)
 })
 
 
