@@ -230,7 +230,7 @@ const validateSpot = [
                 // error handler 2
                 if (spot.ownerId !== ownerId) {
                     res.status(403).json({
-                        "message": "You cannot add an image to this spot because you do not own it."
+                        "message": "Forbidden"
                       })
                 }
         
@@ -244,6 +244,74 @@ const validateSpot = [
 
         res.status(200).json(spotImage)
     })
+
+//edit a spot 
+router.put('/:spotId', requireAuth, validateSpot, async (req, res) => {
+    let spotId = req.params.spotId
+    spotId = parseInt(spotId)
+    const { address, city, state, country, lat, lng, name, description, price} = req.body
+    
+    const ownerId = req.user.id
+
+    let spot = await Spot.unscoped().findByPk(spotId)
+
+
+        //error handler 1
+        if (!spot) {
+            res.status(404).json({
+                "message": "Spot couldn't be found"
+              })
+        }
+        // error handler 2
+        if (spot.ownerId !== ownerId) {
+            res.status(403).json({
+                "message": "Forbidden"
+              })
+        }
+    
+    //update values and SAVE!
+    spot.setDataValue('address', address)
+    spot.setDataValue('city', city)
+    spot.setDataValue('state', state)
+    spot.setDataValue('country', country)
+    spot.setDataValue('lat', lat)
+    spot.setDataValue('lng', lng)
+    spot.setDataValue('name', name)
+    spot.setDataValue('description', description)
+    spot.setDataValue('price', price)
+    await spot.save()
+
+    res.status(200).json({spot})
+})
+
+// delete a spot
+router.delete('/:spotId', requireAuth, async (req, res) => {
+    let spotId = req.params.spotId
+    spotId = parseInt(spotId)
+
+    const ownerId = req.user.id
+
+    let spot = await Spot.unscoped().findByPk(spotId)
+
+        //error handler 1
+        if (!spot) {
+            res.status(404).json({
+                "message": "Spot couldn't be found"
+              })
+        }
+        // error handler 2
+        if (spot.ownerId !== ownerId) {
+            res.status(403).json({
+                "message": "Forbidden"
+              })
+        }
+
+    await spot.destroy()
+
+    res.status(200).json({
+        "message": "Successfully deleted"
+      })
+})
 
 
 module.exports = router;
