@@ -150,6 +150,36 @@ const router = express.Router();
         res.status(200).json(reviewRecord)
     })
 
+// delete a review
+    router.delete('/:reviewId', requireAuth, async (req, res) => {
+        let reviewId = req.params.reviewId
+        reviewId = parseInt(reviewId)
+        let userId = req.user.id
+
+        let reviewRecord = await Review.findByPk(reviewId)
+
+            //error handler 1 - check if reviewRecord exists
+            if (!reviewRecord) {
+                return res.status(404).json({
+                    "message": "Review couldn't be found"
+                  })
+            }
+
+            //error handler 2 - check that review record is owned by current user
+            if (reviewRecord.userId !== userId) {
+                return res.status(403).json({
+                    "message": "Forbidden"
+                  })
+            }
+
+        await reviewRecord.destroy()
+
+
+        res.status(200).json({
+            "message": "Successfully deleted"
+          })
+    } )
+
 
 
 
