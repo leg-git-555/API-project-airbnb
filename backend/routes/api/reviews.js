@@ -108,6 +108,48 @@ const router = express.Router();
         )
     })
 
+    const validateReviewEdit = [
+        check('review')
+          .exists({ checkFalsy: true })
+          .notEmpty()
+          .withMessage('Review text is required'),
+        check('stars')
+          .exists({ checkFalsy: true })
+          .isInt({ min: 0, max: 5 })
+          .withMessage('Stars must be an integer from 1 to 5'),
+        handleValidationErrors
+      ];
+
+//edit a review
+    router.put('/:reviewId', requireAuth, validateReviewEdit, async (req, res) => {
+        let reviewId = req.params.reviewId
+        reviewId = parseInt(reviewId)
+        const userId = req.user.id
+        const {review, stars} = req.body
+
+        let reviewRecord = await Review.findByPk(reviewId)
+
+            //error handler 1 - check if reviewRecord exists
+            if (!reviewRecord) {
+                return res.status(404).json({
+                    "message": "Review couldn't be found"
+                  })
+            }
+
+            //error handler 2 - check that review record is owned by current user
+            if (reviewRecord.userId !== userId) {
+                return res.status(403).json({
+                    "message": "Forbidden"
+                  })
+            }
+
+        reviewRecord.review = review
+        reviewRecord.stars = stars
+        await reviewRecord.save()
+
+        res.status(200).json(reviewRecord)
+    })
+
 
 
 
