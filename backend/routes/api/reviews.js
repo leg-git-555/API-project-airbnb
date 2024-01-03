@@ -49,6 +49,65 @@ const router = express.Router();
         return res.status(200).json({'Reviews': reviews})
     })
 
+    const validateReviewImageUrl = [
+        check('url')
+          .exists({ checkFalsy: true })
+          .notEmpty()
+          .withMessage('Url is required.'),
+        handleValidationErrors
+      ];
+
+// add an image to a review based on Review id
+    router.post('/:reviewId/images', requireAuth, validateReviewImageUrl, async (req, res) => {
+        let reviewId = req.params.reviewId
+        reviewId = parseInt(reviewId)
+        let userId = req.user.id
+        const {url} = req.body
+
+            let review = await Review.findByPk(reviewId, {
+                include: [
+                    {
+                        model: ReviewImage
+                    }
+                ]
+            })
+
+                //error handler 1 - check if review exists
+                if (!review) {
+                    return res.status(404).json({
+                        "message": "Review couldn't be found"
+                      })
+                }
+
+                //error handler 2 - check the user is authorized to add image
+                if (review.userId !== userId) {
+                    return res.status(403).json({
+                        "message": "Forbidden"
+                      })
+                }
+
+                //error handler 3 - check that aren't more than 10 existing review images
+                if (review.ReviewImages.length === 10) {
+                    return res.status(403).json({
+                        "message": "Maximum number of images for this resource was reached"
+                      })
+                }
+
+        let newReviewImage = await ReviewImage.create({reviewId, url})
+            
+            newReviewImage = newReviewImage.toJSON()
+            delete newReviewImage.reviewId;
+            delete newReviewImage.createdAt;
+            delete newReviewImage.updatedAt;
+
+
+
+
+        res.status(200).json(
+            newReviewImage
+        )
+    })
+
 
 
 
