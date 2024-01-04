@@ -117,48 +117,49 @@ const validateSpot = [
 
 //get all the current user's spots
     router.get('/current', requireAuth,  async (req, res) => {
-        const {user} = req;
-        let id = user.id;
         
-        let userSpots = await Spot.findAll({
-            where: {
-                ownerId: id
-            }, 
-            include: {
-                model: SpotImage,
-                where: {
-                    preview: true
-                },
-                attributes: ['url'],
-            }
-        })
+        // const {user} = req;
+        // let id = user.id;
+        
+        // let userSpots = await Spot.findAll({
+        //     where: {
+        //         ownerId: id
+        //     }, 
+        //     include: {
+        //         model: SpotImage,
+        //         where: {
+        //             preview: true
+        //         },
+        //         attributes: ['url'],
+        //     }
+        // })
 
-        let userSpotsB = userSpots.map(spot => spot.toJSON())
+        // let userSpotsB = userSpots.map(spot => spot.toJSON())
 
-        for (let spot of userSpotsB) {
-            let count = await Review.count({
-                where: {
-                    spotId: spot.id
-                } 
-            })
+        // for (let spot of userSpotsB) {
+        //     let count = await Review.count({
+        //         where: {
+        //             spotId: spot.id
+        //         } 
+        //     })
 
-            let avgRating = await Review.sum('stars', {
-                where: {
-                    spotId: spot.id
-                }
-            })
+        //     let avgRating = await Review.sum('stars', {
+        //         where: {
+        //             spotId: spot.id
+        //         }
+        //     })
 
-                avgRating = avgRating/count
-                spot.avgRating = avgRating
+        //         avgRating = avgRating/count
+        //         spot.avgRating = avgRating
 
-                spot.previewImage = spot.SpotImages[0].url
-                delete spot.SpotImages
-        }
+        //         spot.previewImage = spot.SpotImages[0].url
+        //         delete spot.SpotImages
+        // }
 
 
-        return res.json({
-            Spots: userSpotsB
-        })
+        // return res.json({
+        //     Spots: userSpotsB
+        // })
     })
 
 //get spot by id
