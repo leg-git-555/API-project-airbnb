@@ -442,5 +442,124 @@ const validateSpot = [
 
     })
 
+    
+
+    // const validateDates = [
+    //     check('startDate')
+    //       .custom((startDate) => {
+    //         let now = Date.now()
+    //          startDate = new Date(startDate) //might need to use is ISO
+    //         let startSeconds = startDate.getTime()
+
+    //             if (!startSeconds || (startSeconds < now)) {
+    //                 throw new Error("startDate cannot be in the past")
+    //             }
+
+    //         return true
+    //       }),
+    //     check('stars')
+    //       .exists({ checkFalsy: true })
+    //       .isInt({ min: 0, max: 5 })
+    //       .withMessage('Stars must be an integer from 1 to 5'),
+    //     handleValidationErrors
+    //   ];
+
+//create a booking for a spot based on the spot's id
+    router.post('/:spotId/bookings', requireAuth, async (req, res) => {
+        let spotId = req.params.spotId
+        spotId = parseInt(spotId)
+        let {startDate, endDate} = req.body
+        let userId = req.user.id
+
+        let spot = await Spot.findByPk(spotId)
+
+        let now = Date.now()
+        startDate = new Date(startDate) //might need to use is ISO
+        let startSeconds = startDate.getTime()
+        endDate = new Date(endDate)
+        let endSeconds = endDate.getTime()
+
+
+                // error handler 1 -- spot isn't found
+                if (!spot) {
+                    return res.status(404).json({
+                        "message": "Spot couldn't be found"
+                    })
+                }
+
+                //error handler 2 -- start date in past
+                if (!startSeconds || (startSeconds < now)) {
+                    return res.status(400).json({
+                        "message": "Bad Request",
+                        "errors": {
+                        "startDate": "startDate cannot be in the past"
+                        }
+                    })
+                }
+
+                //error handler 3 -- end date before start date
+                if (!endDate || (endSeconds <= startSeconds)) {
+                    return res.status(400).json({
+                        "message": "Bad Request",
+                        "errors": {
+                            "endDate": "endDate cannot be on or before startDate"
+                        }
+                    })
+                }
+
+        let bookings = await Booking.findAll({
+            where: {
+                spotId
+            }
+        })
+        bookings = bookings.map(booking => booking.toJSON())
+
+            //loop over each booking
+            for (let booking of bookings) {
+                let currStartSeconds = new Date(booking.startDate).getTime()
+                let currEndSeconds = new Date(booking.endDate).getTime()
+                
+                    //check start date conflict
+                    if (startSeconds >= currStartSeconds && startSeconds <= currEndSeconds) {
+                        return res.status(403).json({
+                            "message": "Sorry, this spot is already booked for the specified dates",
+                            "errors": {
+                              "startDate": "Start date conflicts with an existing booking"
+                            }
+                          })
+                    }
+
+                    //check end date conflict
+                    if (endSeconds >= currStartSeconds && endSeconds <= currEndSeconds) {
+                        return res.status(403).json({
+                            "message": "Sorry, this spot is already booked for the specified dates",
+                            "errors": {
+                                "endDate": "End date conflicts with an existing booking"
+                            }
+                          })
+                    }
+
+                    let wrapCheckStart = currEndSeconds > startSeconds && currEndSeconds < endSeconds
+
+                    //check that new date don't wrap around an existing booking
+                    if (wrapCheckStart) {
+                        return res.status(403).json({
+                            "message": "Sorry, this spot is already booked for the specified dates",
+                            "errors": {
+                              "startDate": "Start date conflicts with an existing booking",
+                              "endDate": "End date conflicts with an existing booking"
+                            }
+                          })
+                    }
+
+            }
+
+        let newBooking = await Booking.create({spotId, userId, startDate, endDate})
+
+        res.json(newBooking)
+    })
+
+    //testing
+
 
 module.exports = router;
