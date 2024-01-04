@@ -14,38 +14,38 @@ module.exports = {
       {
         spotId: 1,
         userId: 2,
-        startDate: '2024-04-20',
-        endDate: '2024-04-27' 
+        startDate: new Date(2024, 4, 20), //maybe add .toString()
+        endDate: new Date(2024, 4, 27)
       },
       {
         spotId: 2,
         userId: 3,
-        startDate: '2024-05-20', 
-        endDate: '2024-05-27' 
+        startDate: new Date(2024, 5, 20), 
+        endDate: new Date(2024, 5, 27)
       },
       {
         spotId: 3,
         userId: 1,
-        startDate: '2024-05-10',
-        endDate: '2024-05-17' 
+        startDate: new Date(2024, 5, 10),
+        endDate: new Date(2024, 5, 17)
       },
       {
         spotId: 4,
         userId: 3,
-        startDate: '2024-04-10',
-        endDate: '2024-04-13' 
+        startDate: new Date(2024, 4, 10),
+        endDate: new Date(2024, 4, 13)
       },
       {
         spotId: 5,
         userId: 2,
-        startDate: '2024-07-4',
-        endDate: '2024-07-16' 
+        startDate: new Date(2024, 7, 4),
+        endDate: new Date(2024, 7, 16)
       },
       {
         spotId: 6,
         userId: 1,
-        startDate: '2024-06-14',
-        endDate: '2024-06-16' 
+        startDate: new Date(2024, 6, 14),
+        endDate: new Date(2024, 6, 16)
       },
     ])
   },
