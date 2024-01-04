@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { setTokenCookie } = require('../../utils/auth');
-const { Spot, Review, SpotImage, User } = require('../../db/models');
+const { Spot, Review, SpotImage, User, ReviewImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const { check } = require('express-validator');
@@ -117,48 +117,49 @@ const validateSpot = [
 
 //get all the current user's spots
     router.get('/current', requireAuth,  async (req, res) => {
-        const {user} = req;
-        let id = user.id;
         
-        let userSpots = await Spot.findAll({
-            where: {
-                ownerId: id
-            }, 
-            include: {
-                model: SpotImage,
-                where: {
-                    preview: true
-                },
-                attributes: ['url'],
-            }
-        })
+        // const {user} = req;
+        // let id = user.id;
+        
+        // let userSpots = await Spot.findAll({
+        //     where: {
+        //         ownerId: id
+        //     }, 
+        //     include: {
+        //         model: SpotImage,
+        //         where: {
+        //             preview: true
+        //         },
+        //         attributes: ['url'],
+        //     }
+        // })
 
-        let userSpotsB = userSpots.map(spot => spot.toJSON())
+        // let userSpotsB = userSpots.map(spot => spot.toJSON())
 
-        for (let spot of userSpotsB) {
-            let count = await Review.count({
-                where: {
-                    spotId: spot.id
-                } 
-            })
+        // for (let spot of userSpotsB) {
+        //     let count = await Review.count({
+        //         where: {
+        //             spotId: spot.id
+        //         } 
+        //     })
 
-            let avgRating = await Review.sum('stars', {
-                where: {
-                    spotId: spot.id
-                }
-            })
+        //     let avgRating = await Review.sum('stars', {
+        //         where: {
+        //             spotId: spot.id
+        //         }
+        //     })
 
-                avgRating = avgRating/count
-                spot.avgRating = avgRating
+        //         avgRating = avgRating/count
+        //         spot.avgRating = avgRating
 
-                spot.previewImage = spot.SpotImages[0].url
-                delete spot.SpotImages
-        }
+        //         spot.previewImage = spot.SpotImages[0].url
+        //         delete spot.SpotImages
+        // }
 
 
-        return res.json({
-            Spots: userSpotsB
-        })
+        // return res.json({
+        //     Spots: userSpotsB
+        // })
     })
 
 //get spot by id
@@ -246,72 +247,157 @@ const validateSpot = [
     })
 
 //edit a spot 
-router.put('/:spotId', requireAuth, validateSpot, async (req, res) => {
-    let spotId = req.params.spotId
-    spotId = parseInt(spotId)
-    const { address, city, state, country, lat, lng, name, description, price} = req.body
-    
-    const ownerId = req.user.id
+    router.put('/:spotId', requireAuth, validateSpot, async (req, res) => {
+        let spotId = req.params.spotId
+        spotId = parseInt(spotId)
+        const { address, city, state, country, lat, lng, name, description, price} = req.body
+        
+        const ownerId = req.user.id
 
-    let spot = await Spot.unscoped().findByPk(spotId)
+        let spot = await Spot.unscoped().findByPk(spotId)
 
 
-        //error handler 1
-        if (!spot) {
-            res.status(404).json({
-                "message": "Spot couldn't be found"
-              })
-        }
-        // error handler 2
-        if (spot.ownerId !== ownerId) {
-            res.status(403).json({
-                "message": "Forbidden"
-              })
-        }
-    
-    //update values and SAVE!
-    spot.setDataValue('address', address)
-    spot.setDataValue('city', city)
-    spot.setDataValue('state', state)
-    spot.setDataValue('country', country)
-    spot.setDataValue('lat', lat)
-    spot.setDataValue('lng', lng)
-    spot.setDataValue('name', name)
-    spot.setDataValue('description', description)
-    spot.setDataValue('price', price)
-    await spot.save()
+            //error handler 1
+            if (!spot) {
+                return res.status(404).json({
+                    "message": "Spot couldn't be found"
+                })
+            }
+            // error handler 2
+            if (spot.ownerId !== ownerId) {
+                return res.status(403).json({
+                    "message": "Forbidden"
+                })
+            }
+        
+        //update values and SAVE!
+        spot.setDataValue('address', address)
+        spot.setDataValue('city', city)
+        spot.setDataValue('state', state)
+        spot.setDataValue('country', country)
+        spot.setDataValue('lat', lat)
+        spot.setDataValue('lng', lng)
+        spot.setDataValue('name', name)
+        spot.setDataValue('description', description)
+        spot.setDataValue('price', price)
+        await spot.save()
 
-    res.status(200).json({spot})
-})
+        res.status(200).json({spot})
+    })
 
 // delete a spot
-router.delete('/:spotId', requireAuth, async (req, res) => {
-    let spotId = req.params.spotId
-    spotId = parseInt(spotId)
+    router.delete('/:spotId', requireAuth, async (req, res) => {
+        let spotId = req.params.spotId
+        spotId = parseInt(spotId)
 
-    const ownerId = req.user.id
+        const ownerId = req.user.id
 
-    let spot = await Spot.unscoped().findByPk(spotId)
+        let spot = await Spot.unscoped().findByPk(spotId)
 
-        //error handler 1
-        if (!spot) {
-            res.status(404).json({
-                "message": "Spot couldn't be found"
-              })
-        }
-        // error handler 2
-        if (spot.ownerId !== ownerId) {
-            res.status(403).json({
-                "message": "Forbidden"
-              })
-        }
+            //error handler 1
+            if (!spot) {
+                return res.status(404).json({
+                    "message": "Spot couldn't be found"
+                })
+            }
+            // error handler 2
+            if (spot.ownerId !== ownerId) {
+                return res.status(403).json({
+                    "message": "Forbidden"
+                })
+            }
 
-    await spot.destroy()
+        await spot.destroy()
 
-    res.status(200).json({
-        "message": "Successfully deleted"
-      })
-})
+        res.status(200).json({
+            "message": "Successfully deleted"
+        })
+    })
 
+//get all reviews by a Spot's id
+    router.get('/:spotId/reviews', async (req, res) => {
+        let spotId = req.params.spotId
+        spotId = parseInt(spotId)
+
+        let spot = await Spot.findByPk(spotId)
+
+            //error handler 1
+            if (!spot) {
+                return res.status(404).json({
+                    "message": "Spot couldn't be found"
+                })
+            }
+
+        let spotReviews = await Review.findAll({
+            where: {
+                spotId
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    model: ReviewImage,
+                    attributes: ['id', 'url']
+                }
+            ]
+        })
+        
+
+        res.status(200).json({
+            Reviews: [...spotReviews]
+        })
+    })
+
+    const validateReview = [
+        check('review')
+          .exists({ checkFalsy: true })
+          .withMessage('Review text is required'),
+        check('stars')
+          .exists({ checkFalsy: true })
+          .isInt({ min: 0, max: 5 })
+          .withMessage('Stars must be an integer from 1 to 5'),
+        handleValidationErrors
+      ];
+
+// create a review for a spot
+    router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res) => {
+        let spotId = req.params.spotId
+        spotId = parseInt(spotId)
+        let userId = req.user.id
+        
+        const {review, stars} = req.body
+
+            let spot = await Spot.findByPk(spotId)
+
+                //error handler 1
+                if (!spot) {
+                    return res.status(404).json({
+                        "message": "Spot couldn't be found"
+                    })
+                }
+
+            let existingReview = await Review.findOne({
+                where: {
+                    spotId,
+                    userId
+                }
+            })
+
+                //error handler 2
+                if(existingReview) {
+                    return res.status(500).json({
+                        "message": "User already has a review for this spot"
+                      })
+                }
+
+        let newReview = await Review.create({spotId, userId, review, stars})
+
+
+
+
+        res.status(201).json(newReview)
+    })
 
 module.exports = router;
