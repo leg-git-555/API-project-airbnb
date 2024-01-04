@@ -72,94 +72,90 @@ const validateSpot = [
 
 //get all spots
     router.get('/', async (req, res) => {
-        let Spots = await Spot.findAll({
-            include: {
-                model: SpotImage,
-                where: {
-                    preview: true
-                },
-                attributes: ['url']
+        let spots = await Spot.unscoped().findAll()
+        spots = spots.map(spot => spot.toJSON())
+
+        let reviews = await Review.findAll()
+        reviews = reviews.map(review => review.toJSON())
+
+        let spotImages = await SpotImage.findAll()
+        spotImages = spotImages.map(spotImage => spotImage.toJSON())
+
+            for (let spot of spots) {
+                let reviewCount = 0;
+                let reviewStarSum = 0;
+
+                    reviews.forEach(review => {
+                        if (review.spotId === spot.id) {
+                            reviewStarSum += review.stars
+                            reviewCount++
+                        }
+                    })
+                
+                spot.avgRating = (reviewStarSum / reviewCount) || 'no reviews yet for this spot!'
+
+                let previewImage = spotImages.find(el => el.spotId === spot.id)
+
+                    if (previewImage) {
+                        spot.previewImage = previewImage.url
+                    } else {
+                        spot.previewImage = 'no preview image for this spot'
+                    }
             }
+
+        res.json({
+            'Spots': spots
         })
-
-        //convert Spots to JSON so it can be manipulated
-        Spots = Spots.map(spot => {
-            spot = spot.toJSON()
-            return spot
-        })
-
-        //iterate over each spot, add the avgRating and previewImage
-        for (let spot of Spots) {
-            let count = await Review.count({
-                where: {
-                    spotId: spot.id
-                }
-            })
-            let avgRating = await Review.sum('stars', {
-                where: {
-                    spotId: spot.id
-                }
-            })
-                avgRating = avgRating/count
-                spot.avgRating = avgRating
-
-                spot.previewImage = spot.SpotImages[0].url
-                delete spot.SpotImages
-        }
-
-        
-        let resObj = {Spots}
-
-        return res.json(resObj)
-
     })
 
 
 //get all the current user's spots
     router.get('/current', requireAuth,  async (req, res) => {
         
-        // const {user} = req;
-        // let id = user.id;
+        const {user} = req;
+        let id = user.id;
         
-        // let userSpots = await Spot.findAll({
-        //     where: {
-        //         ownerId: id
-        //     }, 
-        //     include: {
-        //         model: SpotImage,
-        //         where: {
-        //             preview: true
-        //         },
-        //         attributes: ['url'],
-        //     }
-        // })
+        let userSpots = await Spot.unscoped().findAll({
+            where: {
+                ownerId: id
+            }
+        })
+        userSpots = userSpots.map(userSpot => userSpot.toJSON())
 
-        // let userSpotsB = userSpots.map(spot => spot.toJSON())
+        let spotImages = await SpotImage.findAll()
+        spotImages = spotImages.map(spotImage => spotImage.toJSON())
 
-        // for (let spot of userSpotsB) {
-        //     let count = await Review.count({
-        //         where: {
-        //             spotId: spot.id
-        //         } 
-        //     })
+        for (let spot of userSpots) {
+            let count = await Review.count({
+                where: {
+                    spotId: spot.id
+                } 
+            })
 
-        //     let avgRating = await Review.sum('stars', {
-        //         where: {
-        //             spotId: spot.id
-        //         }
-        //     })
+            let avgRating = await Review.sum('stars', {
+                where: {
+                    spotId: spot.id
+                }
+            })
 
-        //         avgRating = avgRating/count
-        //         spot.avgRating = avgRating
+            let previewImage = spotImages.find((el) => {
+                return el.spotId === spot.id
+            })
 
-        //         spot.previewImage = spot.SpotImages[0].url
-        //         delete spot.SpotImages
-        // }
+                avgRating = avgRating/count
+                spot.avgRating = avgRating
+               
+                if (previewImage) {
+                    spot.previewImage = previewImage.url
+                } else{
+                    spot.previewImage = 'no preview image for this spot. feel free to add an image!'
+                }
+        }
 
 
-        // return res.json({
-        //     Spots: userSpotsB
-        // })
+        return res.json({
+            Spots: userSpots
+        })
     })
 
 //get spot by id
