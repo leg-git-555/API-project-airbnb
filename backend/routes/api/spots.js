@@ -559,5 +559,7 @@ const validateSpot = [
         res.json(newBooking)
     })
 
+    //wonky
+
 
 module.exports = router;
