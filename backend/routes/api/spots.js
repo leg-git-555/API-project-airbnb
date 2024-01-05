@@ -1,5 +1,7 @@
 const express = require('express');
 
+const { Op } = require("sequelize");
+
 const { setTokenCookie } = require('../../utils/auth');
 const { Spot, Review, SpotImage, User, ReviewImage, Booking } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
@@ -68,11 +70,90 @@ const validateSpot = [
         res.status(201).json(spot)
     })
 
-
+    const validateParams = [
+        check('page')
+          .isInt({min: 1})
+          .withMessage('Page must be greater than or equal to 1'),
+        check('size')
+          .isInt({min: 1})
+          .withMessage('Size must be greater than or equal to 1'),
+        check('maxLat').optional()
+          .isFloat({max: 90})
+          .withMessage("Maximum latitude is invalid"),
+        check('minLat').optional()
+          .isFloat({min: -90})
+          .withMessage("Minimum latitude is invalid"),
+        check('minLng').optional()
+          .isFloat({min: -180})
+          .withMessage("Minimum longitude is invalid"),
+        check('maxLng').optional()
+          .isFloat({max: 180})
+          .withMessage("Maximum longitude is invalid"),
+        check('minPrice').optional()
+          .isFloat({min: 0})
+          .withMessage("Minimum price must be greater than or equal to 0"),
+        check('maxPrice').optional()
+          .isFloat({min: 0})
+          .withMessage("Maximum price must be greater than or equal to 0"),
+        handleValidationErrors
+      ];
 
 //get all spots
-    router.get('/', async (req, res) => {
-        let spots = await Spot.unscoped().findAll()
+    router.get('/', validateParams, async (req, res) => {
+        let {size, page, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query
+
+            size = parseInt(size)
+            page = parseInt(page)
+            minPrice = parseInt(minPrice)
+            maxPrice = parseInt(maxPrice)
+            
+
+                let pagination = {}
+
+                    //add limit and offset to pagination obj
+                    if (size) pagination.limit = size
+                    if (page) pagination.offset = size * (page - 1)
+
+                let query = {
+                    where: {
+
+                    }
+                }
+                    //add prices to query obj
+                    if (minPrice) query.where.price = {
+                        [Op.gte]: minPrice
+                    }
+                    if (maxPrice) query.where.price = {
+                        ...query.where.price,
+                        [Op.lte]: maxPrice
+                    }
+
+                    //add lats to query obj
+                    if (minLat) query.where.lat = {
+                        [Op.gte]: minLat
+                    }
+
+                    if (maxLat) query.where.lat = {
+                        ...query.where.lat,
+                        [Op.lte]: maxLat
+                    }
+
+                    //add lngs to query obj
+                    if (minLng) query.where.lng = {
+                        [Op.gte]: minLng,
+                    }
+
+                    if (maxLng) query.where.lng = {
+                        ...query.where.lng,
+                        [Op.lte]: maxLng
+                    }
+
+
+
+        let spots = await Spot.unscoped().findAll({
+            ...query,
+            ...pagination
+        })
         spots = spots.map(spot => spot.toJSON())
 
         let reviews = await Review.findAll()
