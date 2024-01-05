@@ -167,6 +167,49 @@ const router = express.Router();
         res.json(booking)
     })
 
+//delete a booking
+    router.delete('/:bookingId', requireAuth, async (req, res) => {
+        let bookingId = req.params.bookingId
+        bookingId = parseInt(bookingId)
+        let userId = req.user.id
+
+
+            let booking = await Booking.findByPk(bookingId)
+            let now = Date.now()
+            
+
+                //error handler 1 - booking not found
+                    if (!booking) {
+                        return res.status(404).json({
+                            "message": "Booking couldn't be found"
+                        })
+                    }
+                
+            let startSeconds = booking.startDate.getTime()
+                //error handler 2 - can't delete a bookings that's begun
+                    if (now >= startSeconds) {
+                        return res.status(403).json({
+                            "message": "Bookings that have been started can't be deleted"
+                          })
+                    }
+            
+            let spot = await Spot.findByPk(booking.spotId)
+
+                //error handler 3 - booking or spot must belong to current user
+                    if (booking.userId !== userId && spot.ownerId !== userId) {
+                        return res.status(403).json({
+                            "message": "Forbidden"
+                          })
+                    }
+        
+        await booking.destroy()
+
+
+        res.json({
+            "message": "Successfully deleted"
+          })
+    })
+
 
 
 
