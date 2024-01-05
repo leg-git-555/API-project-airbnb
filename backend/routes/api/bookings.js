@@ -1,4 +1,5 @@
 const express = require('express');
+const { Op } = require('sequelize')
 
 const { setTokenCookie } = require('../../utils/auth');
 const { Spot, Review, SpotImage, User, ReviewImage, Booking } = require('../../db/models');
@@ -43,6 +44,128 @@ const router = express.Router();
         })
     })
 
+// edit a booking 
+    router.put('/:bookingId', requireAuth, async (req, res) => {
+        let bookingId = req.params.bookingId
+        bookingId = parseInt(bookingId)
+        let userId = req.user.id
+
+        let {startDate, endDate} = req.body
+        let newStartSeconds = new Date(startDate).getTime()
+        let newEndSeconds = new Date(endDate).getTime()
+
+        let booking = await Booking.findByPk(bookingId)
+        let currStartSeconds = booking.startDate.getTime()
+        let currEndSeconds = booking.endDate.getTime()
+
+        let now = Date.now()
+
+        
+
+            //error handler 1 - booking not found
+            if (!booking) {
+                return res.status(404).json({
+                    "message": "Booking couldn't be found"
+                  })
+            }
+
+            //error handler 2 - userId doesn't match 
+            if (booking.userId !== userId) {
+                return res.status(403).json({
+                    "message": "Forbidden"
+                  })
+            }
+
+            //error handler 3 - can't edit booking that's in the past
+            if (currEndSeconds < now) {
+                return res.status(403).json({
+                    "message": "Past bookings can't be modified"
+                  })
+            }
+
+            //error handler 4 - start is not date or date is in the past
+            if (!newStartSeconds || newStartSeconds < now) {
+                return res.status(400).json({
+                    "message": "Bad Request", 
+                    "errors": {
+                      "startDate": "startDate cannot be in the past"
+                    }
+                  })
+            }
+
+            //error handler 5 - end date is before start date
+            if (!newEndSeconds || newEndSeconds < newStartSeconds) {
+                return res.status(400).json({
+                    "message": "Bad Request", 
+                    "errors": {
+                        "endDate": "endDate cannot be on or before startDate"
+                    }
+                  })
+            }
+
+        let spotId = booking.spotId 
+        let id = booking.id
+
+        let otherBookings = await Booking.findAll({
+            where: {
+                spotId,
+                id: {
+                    [Op.ne]: id
+                }
+            }
+        })
+        otherBookings = otherBookings.map(el => el.toJSON())
+
+            //loop over each booking
+            for (let booking of otherBookings) {
+                let currStartSeconds = new Date(booking.startDate).getTime()
+                let currEndSeconds = new Date(booking.endDate).getTime()
+
+                    //check start date conflict
+                    if (newStartSeconds >= currStartSeconds && newStartSeconds <= currEndSeconds) {
+                        return res.status(403).json({
+                            "message": "Sorry, this spot is already booked for the specified dates",
+                            "errors": {
+                              "startDate": "Start date conflicts with an existing booking"
+                            }
+                          })
+                    }
+
+                    //check end date conflict
+                    if (newEndSeconds >= currStartSeconds && newEndSeconds <= currEndSeconds) {
+                        return res.status(403).json({
+                            "message": "Sorry, this spot is already booked for the specified dates",
+                            "errors": {
+                                "endDate": "End date conflicts with an existing booking"
+                            }
+                          })
+                    }
+
+                    let wrapCheckStart = currEndSeconds >= newStartSeconds && currEndSeconds <= newEndSeconds
+
+                    //check that new date don't wrap around an existing booking
+                    if (wrapCheckStart) {
+                        return res.status(403).json({
+                            "message": "Sorry, this spot is already booked for the specified dates",
+                            "errors": {
+                              "startDate": "Start date conflicts with an existing booking",
+                              "endDate": "End date conflicts with an existing booking"
+                            }
+                          })
+                    }
+            }
+
+        let finalStart = new Date(startDate)
+        let finalEnd = new Date(endDate)
+
+        booking.startDate = finalStart
+        booking.endDate = finalEnd
+        booking.save()
+            
+
+
+        res.json(booking)
+    })
 
 
 

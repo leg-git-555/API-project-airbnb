@@ -474,7 +474,7 @@ const validateSpot = [
         let spot = await Spot.findByPk(spotId)
 
         let now = Date.now()
-        startDate = new Date(startDate) //might need to use is ISO
+        startDate = new Date(startDate) 
         let startSeconds = startDate.getTime()
         endDate = new Date(endDate)
         let endSeconds = endDate.getTime()
@@ -539,7 +539,7 @@ const validateSpot = [
                           })
                     }
 
-                    let wrapCheckStart = currEndSeconds > startSeconds && currEndSeconds < endSeconds
+                    let wrapCheckStart = currEndSeconds >= startSeconds && currEndSeconds <= endSeconds
 
                     //check that new date don't wrap around an existing booking
                     if (wrapCheckStart) {
