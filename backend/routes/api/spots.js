@@ -101,6 +101,7 @@ const validateSpot = [
 //get all spots
     router.get('/', validateParams, async (req, res) => {
         let {size, page, maxLat, minLat, minLng, maxLng, minPrice, maxPrice } = req.query
+        // MIGHT HAVE TO PARSEINT EVERYTHING
 
             size = parseInt(size)
             page = parseInt(page)
@@ -111,8 +112,9 @@ const validateSpot = [
                 let pagination = {}
 
                     //add limit and offset to pagination obj
-                    if (size) pagination.limit = size
-                    if (page) pagination.offset = size * (page - 1)
+                    pagination.limit = size || 10
+                    pagination.offset = (size * (page - 1)) || 0
+
 
                 let query = {
                     where: {
@@ -252,15 +254,16 @@ const validateSpot = [
                 }
             }]
         })
-
+            //error handler 1 - spot not found
             if (!spot) {
-                return res.json({
+                return res.status(404).json({
                     "message": "Spot couldn't be found"
                   })
             }
 
             spot = spot.toJSON()
 
+            //find and add spot owner and add to spot res obj
             let spotOwner = await User.findOne({
                 where: {
                     id: spot.ownerId
@@ -268,7 +271,24 @@ const validateSpot = [
                 attributes: ['id', 'firstName', 'lastName']
             })
 
-            spot.Owner = spotOwner
+                spot.Owner = spotOwner
+
+            //find and add reviews/avg rating to spot res obj
+            let spotReviews = await Review.findAll({
+                where: {
+                    spotId: spot.id
+                }
+            })
+            spotReviews = spotReviews.map(el => el.toJSON())
+            let sumStars = 0
+
+                spot.numReviews = spotReviews.length
+
+                spotReviews.forEach(el => {
+                    sumStars += el.stars
+                })
+
+                spot.avgStarRating = sumStars / spotReviews.length
 
         res.json(spot)
     })
@@ -331,7 +351,7 @@ const validateSpot = [
         
         const ownerId = req.user.id
 
-        let spot = await Spot.unscoped().findByPk(spotId)
+        let spot = await Spot.findByPk(spotId)
 
 
             //error handler 1
@@ -359,7 +379,14 @@ const validateSpot = [
         spot.setDataValue('price', price)
         await spot.save()
 
-        res.status(200).json({spot})
+        spot = spot.toJSON()
+
+        delete spot.id
+        delete spot.ownerId
+        delete spot.updatedAt
+    
+
+        res.status(200).json(spot)
     })
 
 // delete a spot
