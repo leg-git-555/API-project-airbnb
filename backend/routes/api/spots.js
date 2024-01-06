@@ -321,13 +321,13 @@ const validateSpot = [
 
                 //error handler 1
                 if (!spot) {
-                    res.status(404).json({
+                    return res.status(404).json({
                         "message": "Spot couldn't be found"
                       })
                 }
                 // error handler 2
                 if (spot.ownerId !== ownerId) {
-                    res.status(403).json({
+                    return res.status(403).json({
                         "message": "Forbidden"
                       })
                 }
@@ -580,6 +580,20 @@ const validateSpot = [
         let userId = req.user.id
 
         let spot = await Spot.findByPk(spotId)
+            
+            // error handler 1 -- spot isn't found
+                if (!spot) {
+                    return res.status(404).json({
+                        "message": "Spot couldn't be found"
+                    })
+                }
+
+            //error handler 2
+                if (spot.ownerId === userId) {
+                    res.status(403).json({
+                        "message": "Forbidden"
+                    })
+                }
 
         let now = Date.now()
         startDate = new Date(startDate) 
@@ -588,14 +602,8 @@ const validateSpot = [
         let endSeconds = endDate.getTime()
 
 
-                // error handler 1 -- spot isn't found
-                if (!spot) {
-                    return res.status(404).json({
-                        "message": "Spot couldn't be found"
-                    })
-                }
 
-                //error handler 2 -- start date in past
+                //error handler 3 -- start date in past
                 if (!startSeconds || (startSeconds < now)) {
                     return res.status(400).json({
                         "message": "Bad Request",
@@ -605,7 +613,7 @@ const validateSpot = [
                     })
                 }
 
-                //error handler 3 -- end date before start date
+                //error handler 4 -- end date before start date
                 if (!endDate || (endSeconds <= startSeconds)) {
                     return res.status(400).json({
                         "message": "Bad Request",
