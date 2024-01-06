@@ -44,30 +44,58 @@ const router = express.Router();
         })
     })
 
+        //could use below middleware but opting to handle errors inside endpoint
+        /*
+            function validateEndAfterStart(req, _res, next) {
+                let {startDate, endDate } = req.body
+
+                    startDateSeconds = new Date(startDate).getTime()
+                    endDateSeconds = new Date(endDate).getTime()
+
+                    if (endDateSeconds <= startDateSeconds) {
+                        const err = new Error("Bad request")
+                        err.errors = { "endDate": "endDate cannot be on or before startDate"};
+                        err.status = 400;
+                        return next(err);
+                    }
+            }
+
+            const validateDate = [
+                check('startDate')
+                .exists({ checkFalsy: true })
+                .withMessage('startDate cannot be in the past'),
+                check('endDate')
+                .exists({ checkFalsy: true })
+                .withMessage('endDate cannot be on or before startDate'),
+                validateEndAfterStart,
+                handleValidationErrors
+            ];
+            */
+
 // edit a booking 
     router.put('/:bookingId', requireAuth, async (req, res) => {
         let bookingId = req.params.bookingId
         bookingId = parseInt(bookingId)
         let userId = req.user.id
 
+        let booking = await Booking.findByPk(bookingId)
+        
+            //error handler 1 - booking not found
+            if (!booking) {
+                return res.status(404).json({
+                    "message": "Booking couldn't be found"
+                })
+            }
+
         let {startDate, endDate} = req.body
         let newStartSeconds = new Date(startDate).getTime()
         let newEndSeconds = new Date(endDate).getTime()
 
-        let booking = await Booking.findByPk(bookingId)
         let currStartSeconds = booking.startDate.getTime()
         let currEndSeconds = booking.endDate.getTime()
 
         let now = Date.now()
 
-        
-
-            //error handler 1 - booking not found
-            if (!booking) {
-                return res.status(404).json({
-                    "message": "Booking couldn't be found"
-                  })
-            }
 
             //error handler 2 - userId doesn't match 
             if (booking.userId !== userId) {
@@ -93,8 +121,8 @@ const router = express.Router();
                   })
             }
 
-            //error handler 5 - end date is before start date
-            if (!newEndSeconds || newEndSeconds < newStartSeconds) {
+            //error handler 5 - end date is on or before start date
+            if (!newEndSeconds || newEndSeconds <= newStartSeconds) {
                 return res.status(400).json({
                     "message": "Bad Request", 
                     "errors": {
@@ -162,8 +190,6 @@ const router = express.Router();
         booking.endDate = finalEnd
         booking.save()
             
-
-
         res.json(booking)
     })
 

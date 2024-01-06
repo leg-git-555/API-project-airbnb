@@ -351,7 +351,7 @@ const validateSpot = [
         
         const ownerId = req.user.id
 
-        let spot = await Spot.findByPk(spotId)
+        let spot = await Spot.unscoped().findByPk(spotId)
 
 
             //error handler 1
@@ -381,9 +381,9 @@ const validateSpot = [
 
         spot = spot.toJSON()
 
-        delete spot.id
-        delete spot.ownerId
-        delete spot.updatedAt
+        // delete spot.id
+        // delete spot.ownerId
+        // delete spot.updatedAt
     
 
         res.status(200).json(spot)
