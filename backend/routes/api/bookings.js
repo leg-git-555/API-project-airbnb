@@ -44,6 +44,7 @@ const router = express.Router();
         })
     })
 
+    //massive date-check middleware
     const validateDates = [
         check('startDate')
           .exists({ checkFalsy: true })
@@ -113,25 +114,6 @@ const router = express.Router();
                   })
             }
 
-            //error handler 4 - start is not date or date is in the past
-            if (!newStartSeconds || newStartSeconds < now) {
-                return res.status(400).json({
-                    "message": "Bad Request", 
-                    "errors": {
-                      "startDate": "startDate cannot be in the past"
-                    }
-                  })
-            }
-
-            //error handler 5 - end date is on or before start date
-            if (!newEndSeconds || newEndSeconds <= newStartSeconds) {
-                return res.status(400).json({
-                    "message": "Bad Request", 
-                    "errors": {
-                        "endDate": "endDate cannot be on or before startDate"
-                    }
-                  })
-            }
 
         let spotId = booking.spotId 
         let id = booking.id
@@ -151,37 +133,35 @@ const router = express.Router();
                 let currStartSeconds = new Date(booking.startDate).getTime()
                 let currEndSeconds = new Date(booking.endDate).getTime()
 
+                    let tracker = 0;
+                    let errorObj = {
+                        "message": "Sorry, this spot is already booked for the specified dates",
+                        "errors": {
+
+                        }
+                      }
+                
                     //check start date conflict
                     if (newStartSeconds >= currStartSeconds && newStartSeconds <= currEndSeconds) {
-                        return res.status(403).json({
-                            "message": "Sorry, this spot is already booked for the specified dates",
-                            "errors": {
-                              "startDate": "Start date conflicts with an existing booking"
-                            }
-                          })
+                        tracker++
+                        errorObj.errors.startDate = "Start date conflicts with an existing booking"
                     }
 
                     //check end date conflict
                     if (newEndSeconds >= currStartSeconds && newEndSeconds <= currEndSeconds) {
-                        return res.status(403).json({
-                            "message": "Sorry, this spot is already booked for the specified dates",
-                            "errors": {
-                                "endDate": "End date conflicts with an existing booking"
-                            }
-                          })
+                        tracker++
+                        errorObj.errors.endDate = "End date conflicts with an existing booking"
                     }
 
-                    let wrapCheckStart = currEndSeconds >= newStartSeconds && currEndSeconds <= newEndSeconds
+                    //check surroud
+                    if (newStartSeconds < currStartSeconds && newEndSeconds > currEndSeconds) {
+                        tracker++
+                        errorObj.errors.startDate = "Start date conflicts with an existing booking"
+                        errorObj.errors.endDate = "End date conflicts with an existing booking"
+                    }
 
-                    //check that new date don't wrap around an existing booking
-                    if (wrapCheckStart) {
-                        return res.status(403).json({
-                            "message": "Sorry, this spot is already booked for the specified dates",
-                            "errors": {
-                              "startDate": "Start date conflicts with an existing booking",
-                              "endDate": "End date conflicts with an existing booking"
-                            }
-                          })
+                    if (tracker > 0) {
+                        return res.status(403).json(errorObj)
                     }
             }
 
