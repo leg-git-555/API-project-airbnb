@@ -44,36 +44,38 @@ const router = express.Router();
         })
     })
 
-        //could use below middleware but opting to handle errors inside endpoint
-        /*
-            function validateEndAfterStart(req, _res, next) {
-                let {startDate, endDate } = req.body
-
-                    startDateSeconds = new Date(startDate).getTime()
-                    endDateSeconds = new Date(endDate).getTime()
+    const validateDates = [
+        check('startDate')
+          .exists({ checkFalsy: true })
+          .custom((startDate) => {
+            let now = Date.now()
+            startDate = new Date(startDate) //might need to use is ISO
+            let startSeconds = startDate.getTime()
+    
+                if (!startSeconds || (startSeconds < now)) {
+                    throw new Error("startDate cannot be in the past")
+                }
+    
+            return true
+          }),
+        check('endDate')
+          .exists({ checkFalsy: true })
+          .custom((value, {req}) => {
+            let {startDate, endDate} = req.body
+                startDateSeconds = new Date(startDate).getTime()
+                endDateSeconds = new Date(endDate).getTime()
 
                     if (endDateSeconds <= startDateSeconds) {
-                        const err = new Error("Bad request")
-                        err.errors = { "endDate": "endDate cannot be on or before startDate"};
-                        err.status = 400;
-                        return next(err);
+                        throw new Error("endDate cannot be on or before startDate")
                     }
-            }
+            return true
+          }),
 
-            const validateDate = [
-                check('startDate')
-                .exists({ checkFalsy: true })
-                .withMessage('startDate cannot be in the past'),
-                check('endDate')
-                .exists({ checkFalsy: true })
-                .withMessage('endDate cannot be on or before startDate'),
-                validateEndAfterStart,
-                handleValidationErrors
-            ];
-            */
+        handleValidationErrors
+      ];
 
 // edit a booking 
-    router.put('/:bookingId', requireAuth, async (req, res) => {
+    router.put('/:bookingId', requireAuth, validateDates, async (req, res) => {
         let bookingId = req.params.bookingId
         bookingId = parseInt(bookingId)
         let userId = req.user.id

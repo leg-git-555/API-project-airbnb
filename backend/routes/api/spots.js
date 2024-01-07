@@ -246,12 +246,13 @@ const validateSpot = [
         let id = req.params.spotId
             id = parseInt(id)
 
-        let spot = await Spot.findByPk(id, {
+        let spot = await Spot.unscoped().findByPk(id, {
             include: [{
                 model: SpotImage,
                 where: {
                     spotId: id
-                }
+                },
+                attributes: ['id', 'url', 'preview']
             }]
         })
             //error handler 1 - spot not found
@@ -449,7 +450,7 @@ const validateSpot = [
         })
         
 
-        res.status(200).json({
+        return res.status(200).json({
             Reviews: [...spotReviews]
         })
     })
@@ -499,9 +500,7 @@ const validateSpot = [
         let newReview = await Review.create({spotId, userId, review, stars})
 
 
-
-
-        res.status(201).json(newReview)
+        return res.status(201).json(newReview)
     })
 
 // get all the bookings for a spot based on spot id
@@ -552,28 +551,40 @@ const validateSpot = [
 
     
 
-    // const validateDates = [
-    //     check('startDate')
-    //       .custom((startDate) => {
-    //         let now = Date.now()
-    //          startDate = new Date(startDate) //might need to use is ISO
-    //         let startSeconds = startDate.getTime()
+   
+ //huge middleware to check dates   
+    const validateDates = [
+        check('startDate')
+          .exists({ checkFalsy: true })
+          .custom((startDate) => {
+            let now = Date.now()
+            startDate = new Date(startDate) //might need to use is ISO
+            let startSeconds = startDate.getTime()
+    
+                if (!startSeconds || (startSeconds < now)) {
+                    throw new Error("startDate cannot be in the past")
+                }
+    
+            return true
+          }),
+        check('endDate')
+          .exists({ checkFalsy: true })
+          .custom((value, {req}) => {
+            let {startDate, endDate} = req.body
+                startDateSeconds = new Date(startDate).getTime()
+                endDateSeconds = new Date(endDate).getTime()
 
-    //             if (!startSeconds || (startSeconds < now)) {
-    //                 throw new Error("startDate cannot be in the past")
-    //             }
+                    if (endDateSeconds <= startDateSeconds) {
+                        throw new Error("endDate cannot be on or before startDate")
+                    }
+            return true
+          }),
 
-    //         return true
-    //       }),
-    //     check('stars')
-    //       .exists({ checkFalsy: true })
-    //       .isInt({ min: 0, max: 5 })
-    //       .withMessage('Stars must be an integer from 1 to 5'),
-    //     handleValidationErrors
-    //   ];
+        handleValidationErrors
+      ];
 
 //create a booking for a spot based on the spot's id
-    router.post('/:spotId/bookings', requireAuth, async (req, res) => {
+    router.post('/:spotId/bookings', requireAuth, validateDates, async (req, res) => {
         let spotId = req.params.spotId
         spotId = parseInt(spotId)
         let {startDate, endDate} = req.body
@@ -590,7 +601,7 @@ const validateSpot = [
 
             //error handler 2
                 if (spot.ownerId === userId) {
-                    res.status(403).json({
+                    return res.status(403).json({
                         "message": "Forbidden"
                     })
                 }
