@@ -56,7 +56,8 @@ const validateSpot = [
                 where: {
                     address,
                     city,
-                    state
+                    state,
+                    country
                 }
             })
 

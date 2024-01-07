@@ -22,7 +22,10 @@ const router = express.Router();
                 model: Spot,
                 include: [{
                     model: SpotImage
-                }]
+                }],
+                attributes: {
+                    exclude: ['description', 'createdAt', 'updatedAt']
+                }
             }]
         })
 
