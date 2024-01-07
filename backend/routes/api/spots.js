@@ -246,15 +246,7 @@ const validateSpot = [
         let id = req.params.spotId
             id = parseInt(id)
 
-        let spot = await Spot.unscoped().findByPk(id, {
-            include: [{
-                model: SpotImage,
-                where: {
-                    spotId: id
-                },
-                attributes: ['id', 'url', 'preview']
-            }]
-        })
+        let spot = await Spot.unscoped().findByPk(id)
             //error handler 1 - spot not found
             if (!spot) {
                 return res.status(404).json({
@@ -264,6 +256,33 @@ const validateSpot = [
 
             spot = spot.toJSON()
 
+            
+            //find and add reviews/avg rating to spot res obj
+            let spotReviews = await Review.findAll({
+                where: {
+                    spotId: spot.id
+                }
+            })
+            spotReviews = spotReviews.map(el => el.toJSON())
+            let sumStars = 0
+            
+            spot.numReviews = spotReviews.length
+            
+            spotReviews.forEach(el => {
+                sumStars += el.stars
+            })
+            
+            spot.avgStarRating = sumStars / spotReviews.length
+            
+            //find and add SpotImages to spot res obj
+            let spotImages = await SpotImage.findAll({
+                where: {
+                    spotId: spot.id
+                },
+                attributes: ['id', 'url', 'preview']
+            })
+            spot.SpotImages = spotImages
+            
             //find and add spot owner and add to spot res obj
             let spotOwner = await User.findOne({
                 where: {
@@ -273,23 +292,6 @@ const validateSpot = [
             })
 
                 spot.Owner = spotOwner
-
-            //find and add reviews/avg rating to spot res obj
-            let spotReviews = await Review.findAll({
-                where: {
-                    spotId: spot.id
-                }
-            })
-            spotReviews = spotReviews.map(el => el.toJSON())
-            let sumStars = 0
-
-                spot.numReviews = spotReviews.length
-
-                spotReviews.forEach(el => {
-                    sumStars += el.stars
-                })
-
-                spot.avgStarRating = sumStars / spotReviews.length
 
         res.json(spot)
     })
