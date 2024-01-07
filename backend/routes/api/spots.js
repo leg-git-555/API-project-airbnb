@@ -246,15 +246,7 @@ const validateSpot = [
         let id = req.params.spotId
             id = parseInt(id)
 
-        let spot = await Spot.unscoped().findByPk(id, {
-            include: [{
-                model: SpotImage,
-                where: {
-                    spotId: id
-                },
-                attributes: ['id', 'url', 'preview']
-            }]
-        })
+        let spot = await Spot.unscoped().findByPk(id)
             //error handler 1 - spot not found
             if (!spot) {
                 return res.status(404).json({
@@ -264,6 +256,33 @@ const validateSpot = [
 
             spot = spot.toJSON()
 
+            
+            //find and add reviews/avg rating to spot res obj
+            let spotReviews = await Review.findAll({
+                where: {
+                    spotId: spot.id
+                }
+            })
+            spotReviews = spotReviews.map(el => el.toJSON())
+            let sumStars = 0
+            
+            spot.numReviews = spotReviews.length
+            
+            spotReviews.forEach(el => {
+                sumStars += el.stars
+            })
+            
+            spot.avgStarRating = sumStars / spotReviews.length
+            
+            //find and add SpotImages to spot res obj
+            let spotImages = await SpotImage.findAll({
+                where: {
+                    spotId: spot.id
+                },
+                attributes: ['id', 'url', 'preview']
+            })
+            spot.SpotImages = spotImages
+            
             //find and add spot owner and add to spot res obj
             let spotOwner = await User.findOne({
                 where: {
@@ -273,23 +292,6 @@ const validateSpot = [
             })
 
                 spot.Owner = spotOwner
-
-            //find and add reviews/avg rating to spot res obj
-            let spotReviews = await Review.findAll({
-                where: {
-                    spotId: spot.id
-                }
-            })
-            spotReviews = spotReviews.map(el => el.toJSON())
-            let sumStars = 0
-
-                spot.numReviews = spotReviews.length
-
-                spotReviews.forEach(el => {
-                    sumStars += el.stars
-                })
-
-                spot.avgStarRating = sumStars / spotReviews.length
 
         res.json(spot)
     })
@@ -612,28 +614,6 @@ const validateSpot = [
         endDate = new Date(endDate)
         let endSeconds = endDate.getTime()
 
-
-
-                //error handler 3 -- start date in past
-                if (!startSeconds || (startSeconds < now)) {
-                    return res.status(400).json({
-                        "message": "Bad Request",
-                        "errors": {
-                        "startDate": "startDate cannot be in the past"
-                        }
-                    })
-                }
-
-                //error handler 4 -- end date before start date
-                if (!endDate || (endSeconds <= startSeconds)) {
-                    return res.status(400).json({
-                        "message": "Bad Request",
-                        "errors": {
-                            "endDate": "endDate cannot be on or before startDate"
-                        }
-                    })
-                }
-
         let bookings = await Booking.findAll({
             where: {
                 spotId
@@ -645,40 +625,37 @@ const validateSpot = [
             for (let booking of bookings) {
                 let currStartSeconds = new Date(booking.startDate).getTime()
                 let currEndSeconds = new Date(booking.endDate).getTime()
+
+                    let tracker = 0;
+                    let errorObj = {
+                        "message": "Sorry, this spot is already booked for the specified dates",
+                        "errors": {
+
+                        }
+                      }
                 
                     //check start date conflict
                     if (startSeconds >= currStartSeconds && startSeconds <= currEndSeconds) {
-                        return res.status(403).json({
-                            "message": "Sorry, this spot is already booked for the specified dates",
-                            "errors": {
-                              "startDate": "Start date conflicts with an existing booking"
-                            }
-                          })
+                        tracker++
+                        errorObj.errors.startDate = "Start date conflicts with an existing booking"
                     }
 
                     //check end date conflict
                     if (endSeconds >= currStartSeconds && endSeconds <= currEndSeconds) {
-                        return res.status(403).json({
-                            "message": "Sorry, this spot is already booked for the specified dates",
-                            "errors": {
-                                "endDate": "End date conflicts with an existing booking"
-                            }
-                          })
+                        tracker++
+                        errorObj.errors.endDate = "End date conflicts with an existing booking"
                     }
 
-                    let wrapCheckStart = currEndSeconds >= startSeconds && currEndSeconds <= endSeconds
-
-                    //check that new date don't wrap around an existing booking
-                    if (wrapCheckStart) {
-                        return res.status(403).json({
-                            "message": "Sorry, this spot is already booked for the specified dates",
-                            "errors": {
-                              "startDate": "Start date conflicts with an existing booking",
-                              "endDate": "End date conflicts with an existing booking"
-                            }
-                          })
+                    //check surroud
+                    if (startSeconds < currStartSeconds && endSeconds > currEndSeconds) {
+                        tracker++
+                        errorObj.errors.startDate = "Start date conflicts with an existing booking"
+                        errorObj.errors.endDate = "End date conflicts with an existing booking"
                     }
 
+                    if (tracker > 0) {
+                        return res.status(403).json(errorObj)
+                    }
             }
 
         let newBooking = await Booking.create({spotId, userId, startDate, endDate})
