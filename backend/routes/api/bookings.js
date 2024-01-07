@@ -39,7 +39,6 @@ const router = express.Router();
 
 
         res.json({
-            userId,
             'Bookings': bookings
         })
     })
