@@ -1,1 +1,22 @@
 /* TODO: Add sitewide styles */
+
+body {
+    font-family: sans-serif;
+    font-size: 16px;
+    color:rgb(66, 133, 111);
+    background-color: rgb(32, 36, 34);
+}
+
+div.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    border: blue 2px;
+}
+
+#logo {
+    width: auto;
+    height: 50px;
+    margin-top: 1.5%;
+    cursor: pointer;
+}

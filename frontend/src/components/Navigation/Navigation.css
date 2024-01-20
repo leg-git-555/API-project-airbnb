@@ -5,3 +5,12 @@
 .hidden {
   display: none;
 }
+
+ul.navbar {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+  li {
+    list-style: none;
+  }
