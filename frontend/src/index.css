@@ -11,12 +11,17 @@ div.header {
     display: flex;
     flex-direction: row;
     justify-content: start;
-    border: blue 2px;
 }
 
-#logo {
-    width: auto;
-    height: 50px;
-    margin-top: 1.5%;
-    cursor: pointer;
-}
+    #logo {
+        width: auto;
+        height: 50px;
+        margin-top: 1.5%;
+        cursor: pointer;
+    }
+
+    #authButtonContainer {
+        width: 60%;
+        display: flex;
+        justify-content: end;
+    }
