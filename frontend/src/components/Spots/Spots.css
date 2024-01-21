@@ -1,0 +1,30 @@
+
+.spotsContainer {
+    /* background-color: aquamarine; */
+    border: 2px solid gold;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+    .spotCard {
+        width: 30%;
+        height: fit-content;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 2px;
+        padding: 5px;
+    }
+
+        .spotCard > img {
+            height: auto;
+            width: 100%;
+        }
+
+        .locationStars {
+            display: flex;
+            
+        }

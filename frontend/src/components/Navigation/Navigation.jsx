@@ -34,12 +34,15 @@ function Navigation({ isLoaded }) {
     );
 
   return (
+    <>
     <ul>
+      <li>jadfasdfadsf</li>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
       {isLoaded && sessionLinks}
     </ul>
+    </>
   );
 }
 
