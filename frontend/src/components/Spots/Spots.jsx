@@ -17,7 +17,6 @@ export function Spots() {
     }
     // console.log('spoooooots',spots)
 
-    // console.log('STAAAAAAA',stateData)
 
 
     useEffect(() => {
