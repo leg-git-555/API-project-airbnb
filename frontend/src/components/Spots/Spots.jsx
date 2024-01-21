@@ -10,12 +10,13 @@ export function Spots() {
     const stateData = useSelector(state => state.spots)
     let spots = []
 
+    
+
     for (const spot in stateData) {
         spots.push(stateData[spot])
     }
     // console.log('spoooooots',spots)
 
-    // console.log('STAAAAAAA',stateData)
 
 
     useEffect(() => {
@@ -34,7 +35,7 @@ export function Spots() {
 
                         <div className='locationStars'>
                             <div>{`${spot.city}, ${spot.state}`}</div>
-                            {parseInt(spot.avgRating) !==NaN && <div>{`${spot.avgRating}`}</div>}
+                            { !isNaN(parseInt(spot.avgRating)) && <div>{`${spot.avgRating}`}</div>}
                         </div>
 
                     </div>
