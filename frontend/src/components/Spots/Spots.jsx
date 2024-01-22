@@ -2,14 +2,13 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getSpotsThunk } from "../../store/spots"
 import './Spots.css'
-import star from '../../../public/star.ico'
+import star from '../../star.ico'
 
 
 export function Spots() {
     const dispatch = useDispatch()
     const stateData = useSelector(state => state.spots)
     let spots = []
-    console.log(spots)
 
     for (const spot in stateData) {
         spots.push(stateData[spot])
@@ -21,7 +20,8 @@ export function Spots() {
 
     return (
         <>
-            <h3>will this render</h3>
+            <h2>build command should pick this up</h2>
+            <h3>will this render??</h3>
             <div>{stateData.wow}</div>
             <button>get spots!</button>
             <div className='spotsContainer'>

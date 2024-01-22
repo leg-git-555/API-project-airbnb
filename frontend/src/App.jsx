@@ -5,7 +5,7 @@ import LoginFormPage from './components/LoginFormPage';
 import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
-import logo from '../public/alien_favicon.ico'
+import logo from './alien_favicon.ico'
 import { Spots } from './components/Spots/Spots';
 import ProfileButton from './components/Navigation/ProfileButton-bonus';
 import { Spot } from './components/Spot/Spot';
