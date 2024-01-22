@@ -1,0 +1,9 @@
+
+.singleSpotImageContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+    .singleSpotImageContainer > img {
+        width: 45%px;
+    }
