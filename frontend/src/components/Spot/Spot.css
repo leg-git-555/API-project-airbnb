@@ -18,3 +18,18 @@
             width: 40%;
             padding: 5px;
         }
+    
+    .singleSpotBottomThird {
+        display: flex;
+        flex-direction: row;
+    }
+
+        .hostInfoSpotDescription {
+            border: 3px solid pink;
+            width: 60%;
+        }
+
+    .calloutBox {
+        border: 3px solid yellow;
+        width: 30%
+    }
