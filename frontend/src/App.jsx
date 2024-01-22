@@ -8,6 +8,7 @@ import * as sessionActions from './store/session';
 import logo from '../public/alien_favicon.ico'
 import { Spots } from './components/Spots/Spots';
 import ProfileButton from './components/Navigation/ProfileButton-bonus';
+import { Spot } from './components/Spot/Spot';
 
 function Layout() {
   const navigate = useNavigate()
@@ -59,8 +60,12 @@ const router = createBrowserRouter([
         element: <Spots />
       },
       {
-        path: 'somepath',
-        element: <h3>i rendered</h3>
+        path: '/spots/:spotId',
+        element: <Spot />
+      },
+      {
+        path: '/dataloss',
+        element: <h2>losing spot data -- why is spot data gone?</h2>
       }
     ]
   }

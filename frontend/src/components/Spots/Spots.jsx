@@ -10,14 +10,9 @@ export function Spots() {
     const stateData = useSelector(state => state.spots)
     let spots = []
 
-    
-
     for (const spot in stateData) {
         spots.push(stateData[spot])
     }
-    // console.log('spoooooots',spots)
-
-
 
     useEffect(() => {
         dispatch(getSpotsThunk())
