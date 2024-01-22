@@ -4,6 +4,7 @@ import { getSpotByIdThunk } from "../../store/spot"
 import { useParams } from "react-router-dom"
 import './Spot.css'
 import { getReviewsByIdThunk } from "../../store/reviews"
+import star from "../../../dist/star.ico"
 
 
 export function Spot() {
@@ -12,8 +13,8 @@ export function Spot() {
     const { spot } = useSelector(state => state.spot)
     let spotImageRay = spot.SpotImages //without coniditional in return statement, page breaks
 
-    const reviews = useSelector(state => state.reviews)
-        console.log('reviews data', reviews)
+    const { Reviews } = useSelector(state => state.reviews)
+    // console.log('reviews data', Reviews)
 
 
     useEffect(() => {
@@ -41,13 +42,26 @@ export function Spot() {
                     <p>{spot?.description}</p>
                 </div>
                 <div className="calloutBox">
-                    <div>
+                    <div className="calloutBoxUpper">
                         <div>
-                        {`$${spot?.price} night`}
+                            {`$${spot?.price} night`}
                         </div>
-                        <div>
-                            star content here
-                        </div>
+
+                        {Reviews && Reviews.length > 0 ? (
+
+                            <div className='starBox'>
+                                <img src={star}></img>
+                                <div>{`${spot?.avgStarRating} · ${Reviews.length} reviews`}</div>
+                            </div>
+
+                        ) : (
+
+                            <div className='starBox'>
+                                <img src={star}></img>
+                                <div>New</div>
+                            </div>
+
+                        )}
                     </div>
                     <button>Reserve</button>
                 </div>
