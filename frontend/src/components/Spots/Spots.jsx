@@ -2,8 +2,7 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { getSpotsThunk } from "../../store/spots"
 import './Spots.css'
-import star from '../../../dist/star.ico'
-// import '../../../public/'
+import star from '../../../public/star.ico'
 
 
 export function Spots() {

@@ -30,7 +30,7 @@ export const getReviewsByIdThunk = (id) => async (dispatch) => {
     
 
     } catch (e) {
-
+        //handle error here
     }
 
 }
