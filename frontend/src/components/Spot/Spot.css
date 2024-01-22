@@ -5,5 +5,16 @@
 }
 
     .singleSpotImageContainer > img {
-        width: 45%px;
+        width: 45%;
+        padding: 5px;
     }
+
+    .singleSpotImageContainerB {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .singleSpotImageContainerB > img {
+            width: 40%;
+            padding: 5px;
+        }
