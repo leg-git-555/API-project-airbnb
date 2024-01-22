@@ -4,7 +4,7 @@ import { getSpotByIdThunk } from "../../store/spot"
 import { useParams } from "react-router-dom"
 import './Spot.css'
 import { getReviewsByIdThunk } from "../../store/reviews"
-import star from "../../../public/star.ico"
+import star from "../../star.ico"
 
 
 export function Spot() {
