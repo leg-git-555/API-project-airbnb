@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getSpotByIdThunk } from "../../store/spot"
 import { useParams } from "react-router-dom"
 import './Spot.css'
+import { getReviewsByIdThunk } from "../../store/reviews"
 
 
 export function Spot() {
@@ -11,9 +12,13 @@ export function Spot() {
     const { spot } = useSelector(state => state.spot)
     let spotImageRay = spot.SpotImages //without coniditional in return statement, page breaks
 
+    const reviews = useSelector(state => state.reviews)
+        console.log('reviews data', reviews)
+
 
     useEffect(() => {
         dispatch(getSpotByIdThunk(spotId))
+        dispatch(getReviewsByIdThunk(spotId))
     }, [dispatch, spotId])
 
     return (
