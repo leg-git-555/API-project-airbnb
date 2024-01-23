@@ -20,10 +20,7 @@ export function Spots() {
 
     return (
         <>
-            <h2>build command should pick this up</h2>
-            <h3>will this render??</h3>
-            <div>{stateData.wow}</div>
-            <button>get spots!</button>
+            <h2>Welcome!</h2>
             <div className='spotsContainer'>
                 {spots.map(spot => (
                     <div className='spotCard' key={spot.id}>
