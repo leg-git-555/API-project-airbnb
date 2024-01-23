@@ -104,12 +104,12 @@ export function Spot() {
 
                 ) : (
 
-                    <>
+                    <div>
                         <div className='starBox'>
                             <img src={star}></img>
                         </div>
                         {user?.id !== spot?.ownerId && <div>Be the first to post a review!</div>}
-                    </>
+                    </div>
 
                 )}
             </div>
