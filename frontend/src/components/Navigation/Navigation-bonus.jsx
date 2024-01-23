@@ -12,14 +12,14 @@ function Navigation({ isLoaded }) {
   return (
     <ul className='navbar'>
       <li>
-        tester nav element
+        <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/createspot/">Create a New Spot</NavLink>
       </li>
       {isLoaded && (
         <li>
-          formerUserAuth
+          former UserAuth
           {/* <ProfileButton user={sessionUser} /> */}
         </li>
       )}
