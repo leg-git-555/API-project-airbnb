@@ -1,57 +1,51 @@
 import { useEffect, useState } from "react"
 import { csrfFetch } from "../../store/csrf"
 import './CreateSpot.css'
+import { useNavigate } from "react-router-dom"
 
 
 export const CreateSpot = () => {
+    const navigate = useNavigate()
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
-    const [latitude, setLatitude] = useState(0)
-    const [longitude, setLongitude] = useState(0)
     const [description, setDescription] = useState('')
     const [name, setName] = useState('')
     const [validations, setValidations] = useState({})
     const [price, setPrice] = useState(0)
     const [imageOne, setImageOne] = useState('')
-
-    // console.log(validations)
-    // console.log(country)
-    // console.log(city)
-    // console.log(state)
-    // console.log(typeof latitude)
-    // console.log(latitude)
-    // console.log(typeof longitude)
-    // console.log(description)
-    // console.log(name)
-    // console.log(typeof price)
-    // console.log(!imageOne.endsWith('.jpg'))
+    const [imageTwo, setImageTwo] = useState('')
+    const [imageThree, setImageThree] = useState('')
+    const [imageFour, setImageFour] = useState('')
+    const [imageFive, setImageFive] = useState('')
 
 
     useEffect(() => {
         let errorObj = {}
 
+        //so many form validations
         if (address.length === 0) errorObj.address = 'Address is required'
         if (country.length === 0) errorObj.country = 'Country is required'
         if (city.length === 0) errorObj.city = 'City is required'
         if (state.length === 0) errorObj.state = 'State is required'
-        if (parseInt(latitude) < -90 || parseInt(latitude) > 90 || latitude === '') errorObj.latitude = 'Latitude must be between -90 and 90'
-        if (parseInt(longitude) < -180 || parseInt(longitude) > 180 || longitude === '') errorObj.longitude = 'Longitude must be between -180 and 180'
         if (description.length < 30) errorObj.description = errorObj.description = 'Description needs a minimum of 30 characters'
         if (name.length === 0) errorObj.name = 'Name is required'
         if (price === '' || parseInt(price) <= 0) errorObj.price = 'Price is required'
         if (!imageOne.endsWith('.jpg') && !imageOne.endsWith('.jpeg') && !imageOne.endsWith('.png')) errorObj.imageOne = 'Image URL must end in .png, .jpg, or .jpeg'
         if (imageOne === '') errorObj.imageOne = 'Preview image is required'
+        if (imageTwo.length > 0 && !imageTwo.endsWith('.jpg') && !imageTwo.endsWith('.jpeg') && !imageTwo.endsWith('.png')) errorObj.imageTwo = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageThree.length > 0 && !imageThree.endsWith('.jpg') && !imageThree.endsWith('.jpeg') && !imageThree.endsWith('.png')) errorObj.imageThree = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageFour.length > 0 && !imageFour.endsWith('.jpg') && !imageFour.endsWith('.jpeg') && !imageFour.endsWith('.png')) errorObj.imageFour = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageFive.length > 0 && !imageFive.endsWith('.jpg') && !imageFive.endsWith('.jpeg') && !imageFive.endsWith('.png')) errorObj.imageFive = 'Image URL must end in .png, .jpg, or .jpeg'
 
         setValidations(errorObj)
-    }, [setValidations, address, country, city, state, latitude, longitude, description, name, price, imageOne])
+    }, [setValidations, address, country, city, state, description, name, price, imageOne, imageTwo, imageThree, imageFour, imageFive])
 
     const submitForm = async (e) => {
         e.preventDefault()
 
         try {
-
             let res = await csrfFetch('/api/spots', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -59,8 +53,8 @@ export const CreateSpot = () => {
                     country,
                     city,
                     state,
-                    lat: parseInt(latitude),
-                    lng: parseInt(longitude),
+                    lat: 11,
+                    lng: 10,
                     description,
                     name,
                     price: parseInt(price)
@@ -78,10 +72,53 @@ export const CreateSpot = () => {
                     preview: true
                 })
             })
-            
 
+                //complete other fetches if user submits more than preview image
+                if (imageTwo.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageTwo,
+                            preview: true
+                        })
+                    })
+                }
+
+                if (imageThree.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageThree,
+                            preview: true
+                        })
+                    })
+                }
+
+                if (imageFour.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageFour,
+                            preview: true
+                        })
+                    })
+                }
+
+                if (imageFive.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageTwo,
+                            preview: true
+                        })
+                    })
+                }
+
+                navigate(`/spots/${trueRes.id}/`)
+            
         } catch (e) {
-            // console.log(e)
+            console.log(e)
+            alert('this spot already exists!')
         } 
     }
 
@@ -131,25 +168,7 @@ export const CreateSpot = () => {
                     />
                 </label>
                 {validations.state && <p className='validation-error'>{validations.state}</p>}
-                <label>
-                    Latitude
-                    <input
-                        type="number"
-                        value={latitude}
-                        onChange={e => setLatitude(e.target.value)}
-                    />
-                </label>
-                {validations.latitude && <p className='validation-error'>{validations.latitude}</p>}
-                <label>
-                    Longitude
-                    <input
-                        type="number"
-                        value={longitude}
-                        onChange={e => setLongitude(e.target.value)}
-                    />
-
-                </label>
-                {validations.longitude && <p className='validation-error'>{validations.longitude}</p>}
+                
                 <p>------------------------------------------------------</p>
                 <h3>Describe your place to guests</h3>
                 <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</p>
@@ -189,6 +208,34 @@ export const CreateSpot = () => {
                         onChange={e => setImageOne(e.target.value)}
                     />
                 {validations.imageOne && <p className='validation-error'>{validations.imageOne}</p>}
+                    <input
+                        type="text"
+                        value={imageTwo}
+                        placeholder="Image Url"
+                        onChange={e => setImageTwo(e.target.value)}
+                    />
+                {validations.imageTwo && <p className='validation-error'>{validations.imageTwo}</p>}
+                    <input 
+                        type="text"
+                        value={imageThree}
+                        placeholder="Image Url"
+                        onChange={e => setImageThree(e.target.value)}
+                    />
+                {validations.imageThree && <p className='validation-error'>{validations.imageThree}</p>}
+                    <input 
+                        type="text"
+                        value={imageFour}
+                        placeholder="Image Url"
+                        onChange={e => setImageFour(e.target.value)}
+                    />
+                {validations.imageFour && <p className='validation-error'>{validations.imageFour}</p>}
+                    <input 
+                        type="text"
+                        value={imageFive}
+                        placeholder="Image Url"
+                        onChange={e => setImageFive(e.target.value)}
+                    />
+                {validations.imageFive && <p className='validation-error'>{validations.imageFive}</p>}
                 <button
                     type="submit"
                     disabled={Object.keys(validations).length > 0}
