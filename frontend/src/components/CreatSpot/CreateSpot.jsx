@@ -15,23 +15,15 @@ export const CreateSpot = () => {
     const [validations, setValidations] = useState({})
     const [price, setPrice] = useState(0)
     const [imageOne, setImageOne] = useState('')
-
-    // console.log(validations)
-    // console.log(country)
-    // console.log(city)
-    // console.log(state)
-    // console.log(typeof latitude)
-    // console.log(latitude)
-    // console.log(typeof longitude)
-    // console.log(description)
-    // console.log(name)
-    // console.log(typeof price)
-    // console.log(!imageOne.endsWith('.jpg'))
-
+    const [imageTwo, setImageTwo] = useState('')
+    const [imageThree, setImageThree] = useState('')
+    const [imageFour, setImageFour] = useState('')
+    const [imageFive, setImageFive] = useState('')
 
     useEffect(() => {
         let errorObj = {}
 
+        //so many form validations
         if (address.length === 0) errorObj.address = 'Address is required'
         if (country.length === 0) errorObj.country = 'Country is required'
         if (city.length === 0) errorObj.city = 'City is required'
@@ -43,9 +35,13 @@ export const CreateSpot = () => {
         if (price === '' || parseInt(price) <= 0) errorObj.price = 'Price is required'
         if (!imageOne.endsWith('.jpg') && !imageOne.endsWith('.jpeg') && !imageOne.endsWith('.png')) errorObj.imageOne = 'Image URL must end in .png, .jpg, or .jpeg'
         if (imageOne === '') errorObj.imageOne = 'Preview image is required'
+        if (imageTwo.length > 0 && !imageTwo.endsWith('.jpg') && !imageTwo.endsWith('.jpeg') && !imageTwo.endsWith('.png')) errorObj.imageTwo = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageThree.length > 0 && !imageThree.endsWith('.jpg') && !imageThree.endsWith('.jpeg') && !imageThree.endsWith('.png')) errorObj.imageThree = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageFour.length > 0 && !imageFour.endsWith('.jpg') && !imageFour.endsWith('.jpeg') && !imageFour.endsWith('.png')) errorObj.imageFour = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageFive.length > 0 && !imageFive.endsWith('.jpg') && !imageFive.endsWith('.jpeg') && !imageFive.endsWith('.png')) errorObj.imageFive = 'Image URL must end in .png, .jpg, or .jpeg'
 
         setValidations(errorObj)
-    }, [setValidations, address, country, city, state, latitude, longitude, description, name, price, imageOne])
+    }, [setValidations, address, country, city, state, latitude, longitude, description, name, price, imageOne, imageTwo, imageThree, imageFour, imageFive])
 
     const submitForm = async (e) => {
         e.preventDefault()
@@ -189,6 +185,34 @@ export const CreateSpot = () => {
                         onChange={e => setImageOne(e.target.value)}
                     />
                 {validations.imageOne && <p className='validation-error'>{validations.imageOne}</p>}
+                    <input
+                        type="text"
+                        value={imageTwo}
+                        placeholder="Image Url"
+                        onChange={e => setImageTwo(e.target.value)}
+                    />
+                {validations.imageTwo && <p className='validation-error'>{validations.imageTwo}</p>}
+                    <input 
+                        type="text"
+                        value={imageThree}
+                        placeholder="Image Url"
+                        onChange={e => setImageThree(e.target.value)}
+                    />
+                {validations.imageThree && <p className='validation-error'>{validations.imageThree}</p>}
+                    <input 
+                        type="text"
+                        value={imageFour}
+                        placeholder="Image Url"
+                        onChange={e => setImageFour(e.target.value)}
+                    />
+                {validations.imageFour && <p className='validation-error'>{validations.imageFour}</p>}
+                    <input 
+                        type="text"
+                        value={imageFive}
+                        placeholder="Image Url"
+                        onChange={e => setImageFive(e.target.value)}
+                    />
+                {validations.imageFive && <p className='validation-error'>{validations.imageFive}</p>}
                 <button
                     type="submit"
                     disabled={Object.keys(validations).length > 0}
