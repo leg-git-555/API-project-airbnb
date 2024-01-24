@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react"
 import { csrfFetch } from "../../store/csrf"
 import './CreateSpot.css'
+import { useNavigate } from "react-router-dom"
 
 
 export const CreateSpot = () => {
+    const navigate = useNavigate()
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
-    const [latitude, setLatitude] = useState(0)
-    const [longitude, setLongitude] = useState(0)
     const [description, setDescription] = useState('')
     const [name, setName] = useState('')
     const [validations, setValidations] = useState({})
@@ -20,6 +20,7 @@ export const CreateSpot = () => {
     const [imageFour, setImageFour] = useState('')
     const [imageFive, setImageFive] = useState('')
 
+
     useEffect(() => {
         let errorObj = {}
 
@@ -28,8 +29,6 @@ export const CreateSpot = () => {
         if (country.length === 0) errorObj.country = 'Country is required'
         if (city.length === 0) errorObj.city = 'City is required'
         if (state.length === 0) errorObj.state = 'State is required'
-        if (parseInt(latitude) < -90 || parseInt(latitude) > 90 || latitude === '') errorObj.latitude = 'Latitude must be between -90 and 90'
-        if (parseInt(longitude) < -180 || parseInt(longitude) > 180 || longitude === '') errorObj.longitude = 'Longitude must be between -180 and 180'
         if (description.length < 30) errorObj.description = errorObj.description = 'Description needs a minimum of 30 characters'
         if (name.length === 0) errorObj.name = 'Name is required'
         if (price === '' || parseInt(price) <= 0) errorObj.price = 'Price is required'
@@ -41,13 +40,12 @@ export const CreateSpot = () => {
         if (imageFive.length > 0 && !imageFive.endsWith('.jpg') && !imageFive.endsWith('.jpeg') && !imageFive.endsWith('.png')) errorObj.imageFive = 'Image URL must end in .png, .jpg, or .jpeg'
 
         setValidations(errorObj)
-    }, [setValidations, address, country, city, state, latitude, longitude, description, name, price, imageOne, imageTwo, imageThree, imageFour, imageFive])
+    }, [setValidations, address, country, city, state, description, name, price, imageOne, imageTwo, imageThree, imageFour, imageFive])
 
     const submitForm = async (e) => {
         e.preventDefault()
 
         try {
-
             let res = await csrfFetch('/api/spots', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -55,8 +53,8 @@ export const CreateSpot = () => {
                     country,
                     city,
                     state,
-                    lat: parseInt(latitude),
-                    lng: parseInt(longitude),
+                    lat: 11,
+                    lng: 10,
                     description,
                     name,
                     price: parseInt(price)
@@ -74,10 +72,53 @@ export const CreateSpot = () => {
                     preview: true
                 })
             })
-            
 
+                //complete other fetches if user submits more than preview image
+                if (imageTwo.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageTwo,
+                            preview: true
+                        })
+                    })
+                }
+
+                if (imageThree.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageThree,
+                            preview: true
+                        })
+                    })
+                }
+
+                if (imageFour.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageFour,
+                            preview: true
+                        })
+                    })
+                }
+
+                if (imageFive.length > 1) {
+                    await csrfFetch(path, {
+                        method:'POST',
+                        body: JSON.stringify({
+                            url: imageTwo,
+                            preview: true
+                        })
+                    })
+                }
+
+                navigate(`/spots/${trueRes.id}/`)
+            
         } catch (e) {
-            // console.log(e)
+            console.log(e)
+            alert('this spot already exists!')
         } 
     }
 
@@ -127,25 +168,7 @@ export const CreateSpot = () => {
                     />
                 </label>
                 {validations.state && <p className='validation-error'>{validations.state}</p>}
-                <label>
-                    Latitude
-                    <input
-                        type="number"
-                        value={latitude}
-                        onChange={e => setLatitude(e.target.value)}
-                    />
-                </label>
-                {validations.latitude && <p className='validation-error'>{validations.latitude}</p>}
-                <label>
-                    Longitude
-                    <input
-                        type="number"
-                        value={longitude}
-                        onChange={e => setLongitude(e.target.value)}
-                    />
-
-                </label>
-                {validations.longitude && <p className='validation-error'>{validations.longitude}</p>}
+                
                 <p>------------------------------------------------------</p>
                 <h3>Describe your place to guests</h3>
                 <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</p>
