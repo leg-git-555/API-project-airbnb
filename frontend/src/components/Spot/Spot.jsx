@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom"
 import './Spot.css'
 import { getReviewsByIdThunk } from "../../store/reviews"
 import star from "../../star.ico"
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import { ReviewFormModal } from "../ReviewFormModal/ReviewFormModal"
 
 //npm install react-icons
 
@@ -15,6 +17,20 @@ export function Spot() {
     let spotImageRay = spot.SpotImages //without coniditional in return statement, page breaks
     const { Reviews } = useSelector(state => state.reviews) //review slice of state
     const { user } = useSelector(state => state.session)
+
+    //check that we have store data and set up boolean for 'post a review button'
+    let genBool;
+    if (spot && Reviews && user) genBool = true
+
+    let ownerBool;
+    if (spot.ownerId !== user?.id) ownerBool = true
+
+    let reviewBool = true
+    if (Reviews.length > 0) {
+        Reviews.forEach(review => {
+            if (review.userId === user?.id) reviewBool = false
+        })
+    }
 
 
     const monthObj = {
@@ -36,6 +52,8 @@ export function Spot() {
         dispatch(getSpotByIdThunk(spotId))
         dispatch(getReviewsByIdThunk(spotId))
     }, [dispatch, spotId])
+
+
 
     return (
 
@@ -88,6 +106,14 @@ export function Spot() {
                             <img src={star}></img>
                             <div>{`${spot?.avgStarRating} · ${Reviews.length} reviews`}</div>
                         </div>
+                        {genBool && ownerBool && reviewBool &&
+                            <div className='review-modal-container'>
+                                <OpenModalMenuItem 
+                                    itemText="Leave Review"
+                                    modalComponent={<ReviewFormModal spotId={spotId}/>}
+                                />
+                            </div>}
+
                         <div className='reviewCardContainer'>
                             {Reviews.map(review => (
                                 <div className='reviewCard' key={review.id}>
