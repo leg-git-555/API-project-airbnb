@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { csrfFetch } from "../../store/csrf"
 import './CreateSpot.css'
 
 
@@ -13,6 +14,7 @@ export const CreateSpot = () => {
     const [name, setName] = useState('')
     const [validations, setValidations] = useState({})
     const [price, setPrice] = useState(0)
+    const [imageOne, setImageOne] = useState('')
 
     // console.log(validations)
     // console.log(country)
@@ -24,6 +26,7 @@ export const CreateSpot = () => {
     // console.log(description)
     // console.log(name)
     // console.log(typeof price)
+    // console.log(!imageOne.endsWith('.jpg'))
 
 
     useEffect(() => {
@@ -38,24 +41,48 @@ export const CreateSpot = () => {
         if (description.length < 30) errorObj.description = errorObj.description = 'Description needs a minimum of 30 characters'
         if (name.length === 0) errorObj.name = 'Name is required'
         if (price === '' || parseInt(price) <= 0) errorObj.price = 'Price is required'
+        if (!imageOne.endsWith('.jpg') && !imageOne.endsWith('.jpeg') && !imageOne.endsWith('.png')) errorObj.imageOne = 'Image URL must end in .png, .jpg, or .jpeg'
+        if (imageOne === '') errorObj.imageOne = 'Preview image is required'
 
         setValidations(errorObj)
-    }, [setValidations, address, country, city, state, latitude, longitude, description, name, price])
+    }, [setValidations, address, country, city, state, latitude, longitude, description, name, price, imageOne])
 
-    const submitForm = (e) => {
+    const submitForm = async (e) => {
         e.preventDefault()
 
-        console.log({
-            address,
-            country,
-            city,
-            state,
-            lat: parseInt(latitude),
-            lng: parseInt(longitude),
-            description,
-            name,
-            price: parseInt(price)
-        })
+        try {
+
+            let res = await csrfFetch('/api/spots', {
+                method: 'POST',
+                body: JSON.stringify({
+                    address,
+                    country,
+                    city,
+                    state,
+                    lat: parseInt(latitude),
+                    lng: parseInt(longitude),
+                    description,
+                    name,
+                    price: parseInt(price)
+                })
+            })
+    
+            let trueRes = await res.json()
+    
+                const path = `/api/spots/${trueRes.id}/images`
+    
+            await csrfFetch(path, {
+                method:'POST',
+                body: JSON.stringify({
+                    url: imageOne,
+                    preview: true
+                })
+            })
+            
+
+        } catch (e) {
+            // console.log(e)
+        } 
     }
 
     return (
@@ -152,6 +179,16 @@ export const CreateSpot = () => {
                         onChange={e => setPrice(e.target.value)}
                     />
                 {validations.price && <p className='validation-error'>{validations.price}</p>}
+                <p>------------------------------------------------------</p>
+                <h3>Liven up your spot with photos</h3>
+                <p>Submit a link to at least one photo to publish your spot.</p>
+                    <input 
+                        type="text"
+                        value={imageOne}
+                        placeholder="Preview Image URL"
+                        onChange={e => setImageOne(e.target.value)}
+                    />
+                {validations.imageOne && <p className='validation-error'>{validations.imageOne}</p>}
                 <button
                     type="submit"
                     disabled={Object.keys(validations).length > 0}
