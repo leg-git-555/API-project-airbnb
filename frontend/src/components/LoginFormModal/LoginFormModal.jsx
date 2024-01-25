@@ -33,7 +33,7 @@ function LoginFormModal() {
       .then(closeModal)
       .catch(async (res) => {
         const data = await res.json();
-        console.log('data inside on submit', data.message)
+        // console.log('data inside on submit', data.message)
         if (data && data.message === 'Invalid credentials') {
           setErrors({
             invalidCredentials: data.message

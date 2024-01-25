@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { getCurrentSpotsThunk } from "../../store/currentSpots"
 import star from '../../star.ico'
 import { useNavigate } from "react-router-dom"
+import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
+import { DeleteSpotModal } from "../DeleteSpotModal/DeleteSpotModal"
 
 
 
@@ -41,10 +43,14 @@ export function ManageSpots() {
                             </div>
                             <div className="manage-spots-button-container" key={spot.id}>
                                 <button onClick={() => { navigate(`/spots/${spot.id}/edit`) }}>update</button>
-                                <button>delete</button>
+                                <button>
+                                    <OpenModalMenuItem 
+                                        itemText="Delete"
+                                        modalComponent={<DeleteSpotModal id={spot.id} />}
+                                    />
+                                </button>
                             </div>
                         </div>
-
             
                 ))}
 
