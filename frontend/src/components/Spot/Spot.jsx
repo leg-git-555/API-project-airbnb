@@ -7,6 +7,7 @@ import { getReviewsByIdThunk } from "../../store/reviews"
 import star from "../../star.ico"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import { ReviewFormModal } from "../ReviewFormModal/ReviewFormModal"
+import { DeleteReviewModal } from "../DeleteReviewModal/DeleteReviewModal"
 
 //npm install react-icons
 
@@ -17,6 +18,7 @@ export function Spot() {
     let spotImageRay = spot.SpotImages //without coniditional in return statement, page breaks
     const { Reviews } = useSelector(state => state.reviews) //review slice of state
     const { user } = useSelector(state => state.session)
+
 
     //check that we have store data and set up boolean for 'post a review button'
     let genBool;
@@ -108,9 +110,9 @@ export function Spot() {
                         </div>
                         {genBool && ownerBool && reviewBool &&
                             <button className='review-modal-container'>
-                                <OpenModalMenuItem 
+                                <OpenModalMenuItem
                                     itemText="Leave Review"
-                                    modalComponent={<ReviewFormModal spotId={spotId}/>}
+                                    modalComponent={<ReviewFormModal spotId={spotId} />}
                                 />
                             </button>}
 
@@ -120,6 +122,13 @@ export function Spot() {
                                     <div>{review.User.firstName}</div>
                                     <div>{monthObj[review.createdAt.slice(5, 7)]} {review.createdAt.slice(0, 4)}</div>
                                     <div>{review.review}</div>
+                                    {review.userId === user?.id &&
+                                        <button>
+                                            <OpenModalMenuItem
+                                                itemText="Delete"
+                                                modalComponent={<DeleteReviewModal reviewId={review.id}/>}
+                                            />
+                                        </button>}
                                     <br />
                                 </div>
                             ))}
