@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 //action type
 const REVIEWS_BY_ID = 'reviews/REVIEWS_BY_ID'
+const DELETE_REVIEW_BY_ID = 'reviews/DELETE_REVIEW_BY_ID'
 
 
 //action creator
@@ -12,6 +13,12 @@ export const ReviewsByIdAction = (payload) => {
     }
 }
 
+export const deleteReviewByIdAction = (payload) => {
+    return {
+        type: DELETE_REVIEW_BY_ID,
+        payload
+    }
+}
 
 
 
@@ -45,6 +52,12 @@ export function reviewsBySpotIdReducer (state = initialState, action) {
         case REVIEWS_BY_ID: {
             let newState = {...state, ...action.payload}
             return newState
+        } case DELETE_REVIEW_BY_ID: {
+            let newState = []
+                state.Reviews.forEach(el => {
+                    if (el.id !== action.payload) newState.push(el)
+                })
+            return {...state, Reviews: newState}
         }
         default:
             return state
