@@ -107,12 +107,12 @@ export function Spot() {
                             <div>{`${spot?.avgStarRating} · ${Reviews.length} reviews`}</div>
                         </div>
                         {genBool && ownerBool && reviewBool &&
-                            <div className='review-modal-container'>
+                            <button className='review-modal-container'>
                                 <OpenModalMenuItem 
                                     itemText="Leave Review"
                                     modalComponent={<ReviewFormModal spotId={spotId}/>}
                                 />
-                            </div>}
+                            </button>}
 
                         <div className='reviewCardContainer'>
                             {Reviews.map(review => (
