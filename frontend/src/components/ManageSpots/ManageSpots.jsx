@@ -6,44 +6,47 @@ import { useNavigate } from "react-router-dom"
 
 
 
-export function ManageSpots () {
+export function ManageSpots() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    let {Spots} = useSelector(state => state.currentSpots)
+    let { Spots } = useSelector(state => state.currentSpots)
 
-    // console.log('current spots data', Spots)
 
-        useEffect(() => {
-            dispatch(getCurrentSpotsThunk())
-        }, [dispatch])
+    useEffect(() => {
+        dispatch(getCurrentSpotsThunk())
+    }, [dispatch])
 
     return (
         <>
             <h1>Manage Your Spots</h1>
-            <button>Create a New Spot</button>
+            <button
+                onClick={() => navigate('/spots/new')}
+            >Create a New Spot</button>
             <div className="spotsContainer">
-            {Spots.map(spot => (
-                <div className='spotCard' key={spot.id} onClick={() => navigate(`/spots/${spot.id}`)}>
-                   <img src={spot.previewImage}></img>
+                {Spots.map(spot => (
+            
+                        <div className='spotCard' key={spot.id}>
+                            <img src={spot.previewImage} onClick={() => navigate(`/spots/${spot.id}`)}></img>
 
-                   <div className='locationStars'>
-                        <div>{`${spot.city}, ${spot.state}`}</div>
-                        <div className="starContainer">
-                            <img src={star}></img>
-                            {!isNaN(parseInt(spot.avgRating)) && <div>{`${spot.avgRating}`}</div>}
+                            <div className='locationStars' onClick={() => navigate(`/spots/${spot.id}`)}>
+                                <div>{`${spot.city}, ${spot.state}`}</div>
+                                <div className="starContainer">
+                                    <img src={star}></img>
+                                    {!isNaN(parseInt(spot.avgRating)) && <div>{`${spot.avgRating}`}</div>}
+                                </div>
+
+                            </div>
+                            <div onClick={() => navigate(`/spots/${spot.id}`)}>
+                                {`$${spot.price} night`}
+                            </div>
+                            <div className="manage-spots-button-container" key={spot.id}>
+                                <button onClick={() => { navigate(`/spots/${spot.id}/edit`) }}>update</button>
+                                <button>delete</button>
+                            </div>
                         </div>
 
-                   </div>
-                        <div>
-                            {`$${spot.price} night`}
-                        </div>
-
-                        <div>
-                            <button>update</button>
-                            <button>delete</button>
-                        </div>
-                </div>
-            ))}
+            
+                ))}
 
             </div>
         </>

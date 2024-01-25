@@ -15,7 +15,7 @@ function Navigation({ isLoaded }) {
         <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <NavLink to="/createspot/">Create a New Spot</NavLink>
+        <NavLink to="/spots/new">Create a New Spot</NavLink>
       </li>
       {isLoaded && (
         <li>
