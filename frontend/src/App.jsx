@@ -11,6 +11,7 @@ import ProfileButton from './components/Navigation/ProfileButton-bonus';
 import { Spot } from './components/Spot/Spot';
 import { CreateSpot } from './components/CreatSpot/CreateSpot';
 import { ManageSpots } from './components/ManageSpots/ManageSpots';
+import { UpdateSpot } from './components/UpdateSpot/UpdateSpot';
 
 function Layout() {
   const navigate = useNavigate()
@@ -66,12 +67,16 @@ const router = createBrowserRouter([
         element: <Spot />
       },
       {
-        path: '/createspot',
+        path: '/spots/new',
         element: <CreateSpot />
       },
       {
         path: '/spots/current',
         element: <ManageSpots />
+      },
+      {
+        path: '/spots/:id/edit',
+        element: <UpdateSpot />
       }
     ]
   }
