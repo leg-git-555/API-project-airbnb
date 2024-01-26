@@ -26,6 +26,8 @@ function Layout() {
     });
   }, [dispatch]);
 
+  //<Modal /> on line 42? Keep Modal provider wrapped around app?
+
   return (
     <>
       <div className='header'>
@@ -37,7 +39,7 @@ function Layout() {
       </div>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Outlet />}
-
+      
     </>
   );
 }
