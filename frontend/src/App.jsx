@@ -31,8 +31,8 @@ function Layout() {
   return (
     <>
       <div className='header'>
-        <h1>Alien-BnB</h1>
         <img src={logo} alt='alien logo' id='logo' onClick={() => { navigate('/') }}></img>
+        <h1>Alien-BnB</h1>
         <div id='authButtonContainer'>
           <ProfileButton user={sessionUser} />
         </div>

@@ -28,7 +28,11 @@ export function ManageSpots() {
                 {Spots.map(spot => (
             
                         <div className='spotCard' key={spot.id}>
+
+                            <div className="spot-card-img-container">
+
                             <img src={spot.previewImage} onClick={() => navigate(`/spots/${spot.id}`)}></img>
+                            </div>
 
                             <div className='locationStars' onClick={() => navigate(`/spots/${spot.id}`)}>
                                 <div>{`${spot.city}, ${spot.state}`}</div>
