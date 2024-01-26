@@ -10,18 +10,40 @@ body {
 div.header {
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: space-between;
+    align-items: center;
+
 }
 
-    #logo {
-        width: auto;
-        height: 50px;
-        margin-top: 1.5%;
-        cursor: pointer;
-    }
+    
 
     #authButtonContainer {
-        width: 60%;
+        width: fit-content;
         display: flex;
         justify-content: end;
     }
+
+    .logo-container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+        #logo {
+            width: auto;
+            height: 50px;
+            margin-top: 1.5%;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .logo-container > h1 {
+            margin-left: 10px;
+        }
+
+        .profile-button {
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+            cursor: pointer;
+        }

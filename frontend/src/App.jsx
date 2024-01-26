@@ -31,15 +31,17 @@ function Layout() {
   return (
     <>
       <div className='header'>
-        <img src={logo} alt='alien logo' id='logo' onClick={() => { navigate('/') }}></img>
-        <h1>Alien-BnB</h1>
+        <div className='logo-container'>
+          <img src={logo} alt='alien logo' id='logo' onClick={() => { navigate('/') }}></img>
+          <h1>BnB</h1>
+        </div>
         <div id='authButtonContainer'>
           <ProfileButton user={sessionUser} />
         </div>
       </div>
       <Navigation isLoaded={isLoaded} />
       {isLoaded && <Outlet />}
-      
+
     </>
   );
 }

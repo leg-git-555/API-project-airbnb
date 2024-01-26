@@ -5,6 +5,7 @@ import star from '../../star.ico'
 import { useNavigate } from "react-router-dom"
 import OpenModalMenuItem from "../Navigation/OpenModalMenuItem"
 import { DeleteSpotModal } from "../DeleteSpotModal/DeleteSpotModal"
+import { getSpotsThunk } from "../../store/spots"
 
 
 
@@ -12,10 +13,12 @@ export function ManageSpots() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     let { Spots } = useSelector(state => state.currentSpots)
-
+    useSelector(state => state.spots)
+        
 
     useEffect(() => {
         dispatch(getCurrentSpotsThunk())
+        dispatch(getSpotsThunk())
     }, [dispatch])
 
     return (

@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux"
 import { useModal } from "../../context/Modal"
 import { csrfFetch } from "../../store/csrf"
 import { removeACurrentSpot } from "../../store/currentSpots"
+import { deleteSpotAction } from "../../store/spots"
 
 
 export function DeleteSpotModal ({id}) {
@@ -18,7 +19,8 @@ export function DeleteSpotModal ({id}) {
         })
 
         dispatch(removeACurrentSpot(id))
-        
+        //delete from spots too so that homepage shows deletion!
+        dispatch(deleteSpotAction(id))
 
         closeModal()
     }
