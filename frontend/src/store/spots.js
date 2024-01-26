@@ -3,12 +3,22 @@ import { csrfFetch } from "./csrf"
 
 //action type 
 const GET_SPOTS = 'spots/GET_SPOTS'
+const DELETE_SPOT = 'spots/DELETE_SPOT'
 
 //action creator 
 export const getSpots = (payload) => ({
     type: GET_SPOTS,
     payload
 })
+
+export const deleteSpotAction = (payload) => {
+    console.log('inside action')
+    return {
+        type: DELETE_SPOT,
+        payload
+    }
+}
+
 
 //thunk creator
 export const getSpotsThunk = () => async (dispatch) => {
@@ -32,9 +42,13 @@ export function spotsReducer (state = initialState, action) {
 
     switch(action.type) {
         case GET_SPOTS: {
-            // console.log('inside spot reducer, get spots', action.payload)
 
             return {...state, ...action.payload}
+        } case DELETE_SPOT: {
+            console.log('inside reducer', action.payload, state)
+            let newState = {...state}
+            delete newState[action.payload]
+            return newState
         }
         default:
             return state
