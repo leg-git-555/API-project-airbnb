@@ -16,45 +16,43 @@ export function Spot() {
     const { spotId } = useParams()
     const { spot } = useSelector(state => state.spot) //spot slice of state
     let spotImageRay = spot.SpotImages //without coniditional in return statement, page breaks
-    const { Reviews } = useSelector(state => state.reviews) //review slice of state
+    let { Reviews } = useSelector(state => state.reviews) //review slice of state
     const { user } = useSelector(state => state.session)
 
+        //check that we have store data and set up boolean for 'post a review button'
+        let genBool;
+        if (spot && Reviews && user) genBool = true
 
-    //check that we have store data and set up boolean for 'post a review button'
-    let genBool;
-    if (spot && Reviews && user) genBool = true
+        let ownerBool;
+        if (spot.ownerId !== user?.id) ownerBool = true
 
-    let ownerBool;
-    if (spot.ownerId !== user?.id) ownerBool = true
-
-    let reviewBool = true
-    if (Reviews.length > 0) {
-        Reviews.forEach(review => {
-            if (review.userId === user?.id) reviewBool = false
-        })
-    }
+        let reviewBool = true
+        if (Reviews.length > 0) {
+            Reviews.forEach(review => {
+                if (review.userId === user?.id) reviewBool = false
+            })
+        }
 
 
-    const monthObj = {
-        '01': 'January',
-        '02': 'February',
-        '03': 'March',
-        '04': 'April',
-        '05': 'May',
-        '06': 'June',
-        '07': 'July',
-        '08': 'August',
-        '09': 'September',
-        '10': 'October',
-        '11': 'November',
-        '12': 'December'
-    }
+        const monthObj = {
+            '01': 'January',
+            '02': 'February',
+            '03': 'March',
+            '04': 'April',
+            '05': 'May',
+            '06': 'June',
+            '07': 'July',
+            '08': 'August',
+            '09': 'September',
+            '10': 'October',
+            '11': 'November',
+            '12': 'December'
+        }
 
-    useEffect(() => {
-        dispatch(getSpotByIdThunk(spotId))
-        dispatch(getReviewsByIdThunk(spotId))
-    }, [dispatch, spotId])
-
+        useEffect(() => {
+            dispatch(getSpotByIdThunk(spotId))
+            dispatch(getReviewsByIdThunk(spotId))
+        }, [dispatch, spotId])
 
 
     return (
@@ -117,6 +115,7 @@ export function Spot() {
                             </button>}
 
                         <div className='reviewCardContainer'>
+                            
                             {Reviews.map(review => (
                                 <div className='reviewCard' key={review.id}>
                                     <div>{review.User.firstName}</div>
