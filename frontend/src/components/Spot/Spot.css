@@ -25,12 +25,12 @@
     }
 
         .hostInfoSpotDescription {
-            border: 3px solid pink;
+            /* border: 3px solid pink; */
             width: 50%;
         }
 
     .calloutBox {
-        border: 3px solid yellow;
+        /* border: 3px solid yellow; */
         width: 50%;
     }
 
@@ -40,7 +40,7 @@
         }
 
             .starBox {
-                border: 2px solid green;
+                /* border: 2px solid green; */
                 display: flex;
                 align-items: baseline;
             }
