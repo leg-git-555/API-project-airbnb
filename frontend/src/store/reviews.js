@@ -50,7 +50,10 @@ export function reviewsBySpotIdReducer (state = initialState, action) {
 
     switch(action.type) {
         case REVIEWS_BY_ID: {
-            let newState = {...state, ...action.payload}
+            let reviewRay = [...action.payload.Reviews]
+            reviewRay.reverse()
+
+            let newState = {...state, Reviews: reviewRay}
             return newState
         } case DELETE_REVIEW_BY_ID: {
             let newState = []

@@ -1,7 +1,7 @@
 
 .spotsContainer {
     /* background-color: aquamarine; */
-    border: 2px solid gold;
+    
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -9,6 +9,7 @@
 }
 
     .spotCard {
+        background-color: rgb(45, 53, 49);
         width: 30%;
         height: fit-content;
         display: flex;
@@ -17,6 +18,7 @@
         justify-content: center;
         margin: 2px;
         padding: 5px;
+        cursor: pointer;
     }
 
         .spotCard > img {
@@ -26,6 +28,7 @@
 
         .locationStars {
             display: flex;
+            flex-direction: row;
         }
 
             .starContainer {
