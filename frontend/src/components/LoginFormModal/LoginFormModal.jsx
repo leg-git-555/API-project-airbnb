@@ -11,20 +11,20 @@ function LoginFormModal() {
   const [errors, setErrors] = useState({});
   const { closeModal } = useModal();
 
-    // console.log('credential', credential)
-    // console.log('password', password)
-    // console.log(Object.keys(errors).length)
-    //test comment
+  // console.log('credential', credential)
+  // console.log('password', password)
+  // console.log(Object.keys(errors).length)
+  //test comment
 
-    useEffect( () => {
-      let errorObj = {}
+  useEffect(() => {
+    let errorObj = {}
 
-        if (credential.length < 4) errorObj.credential = 'Credential must be at least 4 characters'
+    if (credential.length < 4) errorObj.credential = 'Credential must be at least 4 characters'
 
-        if (password.length < 6) errorObj.password = 'Password must be at least 6 characters'
+    if (password.length < 6) errorObj.password = 'Password must be at least 6 characters'
 
-      setErrors(errorObj)
-    }, [setErrors, credential, password])
+    setErrors(errorObj)
+  }, [setErrors, credential, password])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,39 +44,42 @@ function LoginFormModal() {
   };
 
   return (
-    <>
+    <div className='login-form-container'>
       <h1>Log In</h1>
       <form onSubmit={handleSubmit}>
-        <label>
-          Username or Email
-          <input
-            type="text"
-            value={credential}
-            onChange={(e) => setCredential(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.credential && <p>{errors.credential}</p>}
-        {errors.password && <p>{errors.password}</p>}
+        <div className='login-form-input-container'>
+          <label>
+            <input
+              placeholder='Username or Email'
+              type="text"
+              value={credential}
+              onChange={(e) => setCredential(e.target.value)}
+              required
+            />
+            {errors.credential && <p>{errors.credential}</p>}
+          </label>
+          <label>
+            <input
+              placeholder='password'
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {errors.password && <p>{errors.password}</p>}
+          </label>
+        </div>
+       
         {errors.invalidCredentials && <p>{errors.invalidCredentials}</p>}
 
-        <button 
-        type="submit"
-        disabled={Object.keys(errors).length > 0 && !errors.invalidCredentials}
+        <button
+          type="submit"
+          disabled={Object.keys(errors).length > 0 && !errors.invalidCredentials}
         >
           Log In
         </button>
       </form>
-    </>
+    </div>
   );
 }
 
