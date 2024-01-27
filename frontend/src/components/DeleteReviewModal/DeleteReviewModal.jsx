@@ -24,9 +24,9 @@ export function DeleteReviewModal({reviewId}) {
     return (
         <>
             <h1>Confirm Delete</h1>
-            <p>Are you sure you want to delete this review</p>
-            <button onClick={() => deleteClick()}>{`Yes (Delete Review)`}</button>
-            <button onClick={() => closeModal()}>{`No (Keep Review)`}</button>
+            <p>Are you sure you want to delete this review?</p>
+            <button className="delete-button" onClick={() => deleteClick()}>{`Yes (Delete Review)`}</button>
+            <button className="keep-button" onClick={() => closeModal()}>{`No (Keep Review)`}</button>
         </>
     )
 }

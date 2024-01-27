@@ -109,7 +109,7 @@ export function Spot() {
                         {genBool && ownerBool && reviewBool &&
                             <button className='review-modal-container'>
                                 <OpenModalMenuItem
-                                    itemText="Leave Review"
+                                    itemText="Post Your Review"
                                     modalComponent={<ReviewFormModal spotId={spotId} />}
                                 />
                             </button>}
@@ -142,6 +142,13 @@ export function Spot() {
                         <div className='starBox'>
                             <img src={star}></img>
                         </div>
+                        {genBool && ownerBool && reviewBool &&
+                            <button className='review-modal-container'>
+                                <OpenModalMenuItem
+                                    itemText="Post Your Review"
+                                    modalComponent={<ReviewFormModal spotId={spotId} />}
+                                />
+                            </button>}
                         {user?.id !== spot?.ownerId && <div>Be the first to post a review!</div>}
                     </div>
 

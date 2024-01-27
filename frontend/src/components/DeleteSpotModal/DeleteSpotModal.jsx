@@ -4,7 +4,7 @@ import { useModal } from "../../context/Modal"
 import { csrfFetch } from "../../store/csrf"
 import { removeACurrentSpot } from "../../store/currentSpots"
 import { deleteSpotAction } from "../../store/spots"
-
+import './DeleteSpotModal.css'
 
 export function DeleteSpotModal ({id}) {
     const dispatch = useDispatch()
@@ -30,8 +30,8 @@ export function DeleteSpotModal ({id}) {
         <>
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this spot from the listings?</p>
-            <button onClick={() => deleteClick()}>{`Yes (Delete Spot)`}</button>
-            <button onClick={() => closeModal()}>{`No (Keep Spot)`}</button>
+            <button className="delete-button"onClick={() => deleteClick()}>{`Yes (Delete Spot)`}</button>
+            <button className="keep-button" onClick={() => closeModal()}>{`No (Keep Spot)`}</button>
         </>
     )
 }
