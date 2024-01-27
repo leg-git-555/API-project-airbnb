@@ -6,27 +6,31 @@ import { useNavigate } from "react-router-dom"
 
 export const CreateSpot = () => {
     const navigate = useNavigate()
+
+    //slices of state use for controlled inputs
     const [country, setCountry] = useState('')
     const [address, setAddress] = useState('')
     const [city, setCity] = useState('')
     const [state, setState] = useState('')
     const [description, setDescription] = useState('')
     const [name, setName] = useState('')
-    const [validations, setValidations] = useState({})
     const [price, setPrice] = useState('')
     const [imageOne, setImageOne] = useState('')
     const [imageTwo, setImageTwo] = useState('')
     const [imageThree, setImageThree] = useState('')
     const [imageFour, setImageFour] = useState('')
     const [imageFive, setImageFive] = useState('')
-
+    //error handler slices 
+    const [validations, setValidations] = useState({})
+    const [submitBool, setSubmitBool] = useState(false)
+ 
 
     useEffect(() => {
         let errorObj = {}
 
         //so many form validations
-        if (address.length === 0) errorObj.address = 'Address is required'
         if (country.length === 0) errorObj.country = 'Country is required'
+        if (address.length === 0) errorObj.address = 'Address is required'
         if (city.length === 0) errorObj.city = 'City is required'
         if (state.length === 0) errorObj.state = 'State is required'
         if (description.length < 30) errorObj.description = errorObj.description = 'Description needs a minimum of 30 characters'
@@ -44,86 +48,97 @@ export const CreateSpot = () => {
 
     const submitForm = async (e) => {
         e.preventDefault()
+        setSubmitBool(true)
 
-        try {
-            let res = await csrfFetch('/api/spots', {
-                method: 'POST',
-                body: JSON.stringify({
-                    address,
-                    country,
-                    city,
-                    state,
-                    lat: 11,
-                    lng: 10,
-                    description,
-                    name,
-                    price: parseInt(price)
-                })
-            })
-
-            let trueRes = await res.json()
-
-            const path = `/api/spots/${trueRes.id}/images`
-
-            await csrfFetch(path, {
-                method: 'POST',
-                body: JSON.stringify({
-                    url: imageOne,
-                    preview: true
-                })
-            })
-
-            //complete other fetches if user submits more than preview image
-            if (imageTwo.length > 1) {
-                await csrfFetch(path, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        url: imageTwo,
-                        preview: true
+            if(Object.keys(validations).length > 0) {
+                console.log('uhoh')
+                return
+            } else {
+                
+                try {
+                    let res = await csrfFetch('/api/spots', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            address,
+                            country,
+                            city,
+                            state,
+                            lat: 11,
+                            lng: 10,
+                            description,
+                            name,
+                            price: parseInt(price)
+                        })
                     })
-                })
+        
+                    let trueRes = await res.json()
+        
+                    const path = `/api/spots/${trueRes.id}/images`
+        
+                    await csrfFetch(path, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            url: imageOne,
+                            preview: true
+                        })
+                    })
+        
+                    //complete other fetches if user submits more than preview image
+                    if (imageTwo.length > 1) {
+                        await csrfFetch(path, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                url: imageTwo,
+                                preview: true
+                            })
+                        })
+                    }
+        
+                    if (imageThree.length > 1) {
+                        await csrfFetch(path, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                url: imageThree,
+                                preview: true
+                            })
+                        })
+                    }
+        
+                    if (imageFour.length > 1) {
+                        await csrfFetch(path, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                url: imageFour,
+                                preview: true
+                            })
+                        })
+                    }
+        
+                    if (imageFive.length > 1) {
+                        await csrfFetch(path, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                url: imageTwo,
+                                preview: true
+                            })
+                        })
+                    }
+        
+                    navigate(`/spots/${trueRes.id}/`)
+        
+                } catch (e) {
+                    // console.log(e)
+                    let trueE = await e.json()
+                    console.log(trueE.message)
+                    // alert(`${trueE.message}`)
+                    setValidations({backend: trueE.message})
+
+        
+                    //fix this ugh
+                }
+
             }
 
-            if (imageThree.length > 1) {
-                await csrfFetch(path, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        url: imageThree,
-                        preview: true
-                    })
-                })
-            }
-
-            if (imageFour.length > 1) {
-                await csrfFetch(path, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        url: imageFour,
-                        preview: true
-                    })
-                })
-            }
-
-            if (imageFive.length > 1) {
-                await csrfFetch(path, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        url: imageTwo,
-                        preview: true
-                    })
-                })
-            }
-
-            navigate(`/spots/${trueRes.id}/`)
-
-        } catch (e) {
-            console.log(e)
-            let trueE = await e.json()
-            console.log(trueE)
-            alert('this spot already exists!')
-
-            //fix this ugh
-        }
     }
 
     return (
@@ -133,6 +148,7 @@ export const CreateSpot = () => {
                 onSubmit={e => submitForm(e)}
             >
                 <h2>Create a new Spot</h2>
+                {submitBool && validations.backend && <h2 className="validation-error">{validations.backend}</h2>}
                 <h3>{`Where's your place located?`}</h3>
                 <h4>Guests will only get your exact address once they&apos;ve booked a reservation</h4>
                 <label>
@@ -142,9 +158,9 @@ export const CreateSpot = () => {
                         type="text"
                         value={country}
                         onChange={e => setCountry(e.target.value)}
-                    >
+                        >
                     </input>
-                    {validations.country && <p className='validation-error'>{validations.country}</p>}
+                        {submitBool && validations.country && <p className='validation-error'>{validations.country}</p>}
                 </label>
                 <label>
                     Street Address
@@ -154,7 +170,7 @@ export const CreateSpot = () => {
                         value={address}
                         onChange={e => setAddress(e.target.value)}
                     />
-                    {validations.address && <p className='validation-error'>{validations.address}</p>}
+                    {submitBool && validations.address && <p className='validation-error'>{validations.address}</p>}
                 </label>
                 <label>
                     City
@@ -164,7 +180,7 @@ export const CreateSpot = () => {
                         value={city}
                         onChange={e => setCity(e.target.value)}
                     />
-                    {validations.city && <p className='validation-error'>{validations.city}</p>}
+                    {submitBool && validations.city && <p className='validation-error'>{validations.city}</p>}
                 </label>
                 <label className="form-bottom">
                     State
@@ -174,7 +190,7 @@ export const CreateSpot = () => {
                         value={state}
                         onChange={e => setState(e.target.value)}
                     />
-                    {validations.state && <p className='validation-error'>{validations.state}</p>}
+                    {submitBool && validations.state && <p className='validation-error'>{validations.state}</p>}
                 </label>
 
                 <h3>Describe your place to guests</h3>
@@ -185,7 +201,7 @@ export const CreateSpot = () => {
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                     />
-                    {validations.description && <p className='validation-error'>{validations.description}</p>}
+                    {submitBool && validations.description && <p className='validation-error'>{validations.description}</p>}
                 </label>
 
                 <h3>Create a title for your spot</h3>
@@ -197,7 +213,7 @@ export const CreateSpot = () => {
                         value={name}
                         onChange={e => setName(e.target.value)}
                     />
-                    {validations.name && <p className='validation-error'>{validations.name}</p>}
+                    {submitBool && validations.name && <p className='validation-error'>{validations.name}</p>}
                 </label>
                 <h3>Set a base price for your spot</h3>
                 <p>Competitive pricing can help your listing stand out and rank higher in search results</p>
@@ -208,7 +224,7 @@ export const CreateSpot = () => {
                         value={price}
                         onChange={e => setPrice(e.target.value)}
                     />
-                {validations.price && <p className='validation-error'>{validations.price}</p>}
+                {submitBool && validations.price && <p className='validation-error'>{validations.price}</p>}
                 </label>
                 <h3>Liven up your spot with photos</h3>
                 <p>Submit a link to at least one photo to publish your spot.</p>
@@ -218,38 +234,37 @@ export const CreateSpot = () => {
                     placeholder="Preview Image URL"
                     onChange={e => setImageOne(e.target.value)}
                 />
-                {validations.imageOne && <p className='validation-error'>{validations.imageOne}</p>}
+                {submitBool && validations.imageOne && <p className='validation-error'>{validations.imageOne}</p>}
                 <input
                     type="text"
                     value={imageTwo}
                     placeholder="Image Url"
                     onChange={e => setImageTwo(e.target.value)}
                 />
-                {validations.imageTwo && <p className='validation-error'>{validations.imageTwo}</p>}
+                {submitBool && validations.imageTwo && <p className='validation-error'>{validations.imageTwo}</p>}
                 <input
                     type="text"
                     value={imageThree}
                     placeholder="Image Url"
                     onChange={e => setImageThree(e.target.value)}
                 />
-                {validations.imageThree && <p className='validation-error'>{validations.imageThree}</p>}
+                {submitBool && validations.imageThree && <p className='validation-error'>{validations.imageThree}</p>}
                 <input
                     type="text"
                     value={imageFour}
                     placeholder="Image Url"
                     onChange={e => setImageFour(e.target.value)}
                 />
-                {validations.imageFour && <p className='validation-error'>{validations.imageFour}</p>}
+                {submitBool && validations.imageFour && <p className='validation-error'>{validations.imageFour}</p>}
                 <input
                     type="text"
                     value={imageFive}
                     placeholder="Image Url"
                     onChange={e => setImageFive(e.target.value)}
                 />
-                {validations.imageFive && <p className='validation-error'>{validations.imageFive}</p>}
+                {submitBool && validations.imageFive && <p className='validation-error'>{validations.imageFive}</p>}
                 <button
                     type="submit"
-                    disabled={Object.keys(validations).length > 0}
                 >
                     Create spot
                 </button>

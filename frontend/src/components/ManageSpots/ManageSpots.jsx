@@ -21,12 +21,6 @@ export function ManageSpots() {
         dispatch(getSpotsThunk())
     }, [dispatch])
 
-        function updateClick (e) {
-            e.stopPropagation()
-
-            navigate(`/spots/${spot?.id}/edit`)
-        }
-
     return (
         <>
             <h1>Manage Spots</h1>
