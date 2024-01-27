@@ -25,8 +25,8 @@ export function Spots() {
             <h2>Welcome!</h2>
             <div className='spotsContainer'>
                 {spots.map(spot => (
-                    <div className='spotCard' key={spot.id} onClick={() => navigate(`/spots/${spot.id}`)}>
-
+                    <div title={spot.name} className='spotCard' key={spot.id} onClick={() => navigate(`/spots/${spot.id}`)}>
+                        <div className="tooltip">{spot.name}</div>
                         <div className="spot-card-img-container">
                             <img src={spot.previewImage}></img>
                         </div>
@@ -35,12 +35,12 @@ export function Spots() {
                             <div>{`${spot.city}, ${spot.state}`}</div>
                             <div className="starContainer">
                                 <img src={star}></img>
-                                {!isNaN(parseInt(spot.avgRating)) && <div>{`${spot.avgRating}`}</div>}
+                                {!isNaN(parseInt(spot.avgRating)) ? <div>{`${spot.avgRating?.toFixed(1)}`}</div> : <div>New</div>}
                             </div>
                         </div>
 
                         <div>
-                            {`$${spot.price}`}
+                            {`$${spot.price} night`}
                         </div>
 
                     </div>

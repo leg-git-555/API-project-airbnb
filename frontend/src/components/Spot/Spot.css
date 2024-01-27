@@ -22,11 +22,17 @@
     .singleSpotBottomThird {
         display: flex;
         flex-direction: row;
+        margin-top: 10px;
+        align-self: center;
+        border-top: 3px solid rgb(184, 12, 144);
+        border-bottom: 3px solid rgb(184, 12, 144);
     }
 
         .hostInfoSpotDescription {
             /* border: 3px solid pink; */
-            width: 50%;
+            width: 45%;
+            /* margin-left: 10px; */
+            padding-left: 15px;
         }
 
     .calloutBox {

@@ -84,7 +84,7 @@ export function Spot() {
 
                             <div className='starBox'>
                                 <img src={star}></img>
-                                <div>{`${spot?.avgStarRating} · ${Reviews.length} reviews`}</div>
+                                <div>{`${spot?.avgStarRating?.toFixed(1)} · ${Reviews.length} ${Reviews.length === 1 ? 'Review' : 'Reviews'}`}</div>
                             </div>
 
                         ) : (
@@ -96,7 +96,7 @@ export function Spot() {
 
                         )}
                     </div>
-                    <button>Reserve</button>
+                    <button onClick={() => alert('Feature coming soon')}>Reserve</button>
                 </div>
             </div>
             <div>
@@ -104,7 +104,7 @@ export function Spot() {
                     <>
                         <div className='starBox'>
                             <img src={star}></img>
-                            <div>{`${spot?.avgStarRating} · ${Reviews.length} reviews`}</div>
+                            <div>{`${spot?.avgStarRating?.toFixed(1)} · ${Reviews.length} Reviews`}</div>
                         </div>
                         {genBool && ownerBool && reviewBool &&
                             <button className='review-modal-container'>
