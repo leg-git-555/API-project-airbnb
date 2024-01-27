@@ -1,10 +1,10 @@
 /* TODO: Add sitewide styles */
 
 body {
-    font-family: sans-serif;
+    font-family: monospace, serif;
     font-size: 16px;
-    color:rgb(95, 198, 164);
-    background-color: rgb(32, 36, 34);
+    color:rgb(79, 165, 136);
+    background-color: rgb(30, 35, 33);
 }
 
 div.header {
@@ -21,6 +21,7 @@ div.header {
         width: fit-content;
         display: flex;
         justify-content: end;
+        align-items: center;
     }
 
     .logo-container {
@@ -45,5 +46,6 @@ div.header {
             height: 40px;
             width: 40px;
             margin-right: 10px;
+            margin-left: 20px;
             cursor: pointer;
         }

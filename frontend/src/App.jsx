@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
+import { Outlet, createBrowserRouter, RouterProvider, useNavigate, NavLink } from 'react-router-dom';
 import LoginFormPage from './components/LoginFormPage';
 import SignupFormPage from './components/SignupFormPage';
 import Navigation from './components/Navigation/Navigation-bonus';
@@ -19,7 +19,6 @@ function Layout() {
   const [isLoaded, setIsLoaded] = useState(false);
   const sessionUser = useSelector(state => state.session.user);
 
-
   useEffect(() => {
     dispatch(sessionActions.restoreUser()).then(() => {
       setIsLoaded(true)
@@ -36,6 +35,7 @@ function Layout() {
           <h1>BnB</h1>
         </div>
         <div id='authButtonContainer'>
+          {sessionUser && <NavLink to="/spots/new">Create a New Spot</NavLink>}
           <ProfileButton user={sessionUser} />
         </div>
       </div>

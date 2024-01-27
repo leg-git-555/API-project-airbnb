@@ -1,0 +1,10 @@
+
+
+    .sign-up-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sign-up-form > p {
+        color: brown;
+    }

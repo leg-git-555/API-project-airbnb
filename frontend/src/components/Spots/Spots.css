@@ -53,3 +53,11 @@
                     height: 15px;
                     margin-right: 5px;
                 }
+
+                .tooltip {
+                    visibility: hidden;
+                }
+
+               .spotCard:hover > .tooltip {
+                    visibility: visible;
+                }

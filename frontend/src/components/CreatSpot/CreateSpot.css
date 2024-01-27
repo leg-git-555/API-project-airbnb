@@ -6,20 +6,41 @@
    
    
    .create-spot-form {
-        width: 30%;
+        width: 40%;
         margin-left: 30%;
         margin-right: 30%;
         display: flex;
         flex-direction: column;
-        align-items: center;
         margin-bottom: 100px;
+        background-color: rgb(40, 47, 44);
+        border-radius: 20px;
+        padding: 15px;
     }
+
+        .create-spot-form > h2 {
+            text-align: center;
+        }
+            .create-spot-form > h3 {
+                margin-top: 0;
+            }
+                .create-spot-form > h4 {
+                    margin-top: 0;
+                }
+
+                    .create-spot-form > p {
+                        margin-top: 2px;
+                    }
 
         .create-spot-form > label {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             
         }
+
+            .form-bottom {
+                border-bottom: 2px solid;
+                margin-bottom: 10px;
+            }
 
         .validation-error {
             color:brown
