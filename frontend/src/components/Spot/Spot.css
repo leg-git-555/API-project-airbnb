@@ -16,6 +16,8 @@
 
         .singleSpotImageContainerB > img {
             width: 40%;
+            height: 45%;
+            object-fit: cover;
             padding: 5px;
         }
     
