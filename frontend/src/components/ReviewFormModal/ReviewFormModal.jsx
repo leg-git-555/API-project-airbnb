@@ -49,7 +49,7 @@ export function ReviewFormModal({spotId}) {
          >
             <textarea 
                 value={review}
-                placeholder="Leave your review here"
+                placeholder="Leave your review here..."
                 onChange={e => setReview(e.target.value)}
             />
             <input

@@ -21,23 +21,30 @@ export function ManageSpots() {
         dispatch(getSpotsThunk())
     }, [dispatch])
 
+        function updateClick (e) {
+            e.stopPropagation()
+
+            navigate(`/spots/${spot?.id}/edit`)
+        }
+
     return (
         <>
-            <h1>Manage Your Spots</h1>
+            <h1>Manage Spots</h1>
             <button
                 onClick={() => navigate('/spots/new')}
             >Create a New Spot</button>
             <div className="spotsContainer">
                 {Spots.map(spot => (
-            
-                        <div className='spotCard' key={spot.id}>
+        
+                    
+                        <div className='spotCard' key={spot.id} onClick={() => navigate(`/spots/${spot.id}`)}>
 
                             <div className="spot-card-img-container">
 
-                            <img src={spot.previewImage} onClick={() => navigate(`/spots/${spot.id}`)}></img>
+                            <img src={spot.previewImage}></img>
                             </div>
 
-                            <div className='locationStars' onClick={() => navigate(`/spots/${spot.id}`)}>
+                            <div className='locationStars'>
                                 <div>{`${spot.city}, ${spot.state}`}</div>
                                 <div className="starContainer">
                                     <img src={star}></img>
@@ -45,12 +52,15 @@ export function ManageSpots() {
                                 </div>
 
                             </div>
-                            <div onClick={() => navigate(`/spots/${spot.id}`)}>
+                            <div>
                                 {`$${spot.price} night`}
                             </div>
                             <div className="manage-spots-button-container" key={spot.id}>
-                                <button onClick={() => { navigate(`/spots/${spot.id}/edit`) }}>update</button>
-                                <button>
+                                <button onClick={(e) => {
+                                    e.stopPropagation()
+                                    return navigate(`/spots/${spot?.id}/edit`)
+                                }}>update</button>
+                                <button onClick={e => e.stopPropagation()}>
                                     <OpenModalMenuItem 
                                         itemText="Delete"
                                         modalComponent={<DeleteSpotModal id={spot.id} />}
@@ -58,6 +68,7 @@ export function ManageSpots() {
                                 </button>
                             </div>
                         </div>
+    
             
                 ))}
 
