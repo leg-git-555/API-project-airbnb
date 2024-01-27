@@ -61,12 +61,12 @@ export function Spot() {
             <h2>{spot.name}</h2>
             <h3>{`${spot.city}, ${spot.state}, ${spot.country}`}</h3>
             <div className='singleSpotImageContainer'>
-                <img src={spotImageRay && spotImageRay[0].url}></img>
+                <img src={spotImageRay && spotImageRay[0]?.url}></img>
                 <div className='singleSpotImageContainerB'>
-                    <img src={spotImageRay && spotImageRay[0].url}></img>
-                    <img src={spotImageRay && spotImageRay[0].url}></img>
-                    <img src={spotImageRay && spotImageRay[0].url}></img>
-                    <img src={spotImageRay && spotImageRay[0].url}></img>
+                    <img src={spotImageRay && (spotImageRay[1]?.url || spotImageRay[0]?.url)}></img>
+                    <img src={spotImageRay && (spotImageRay[2]?.url || spotImageRay[0]?.url)}></img>
+                    <img src={spotImageRay && (spotImageRay[3]?.url || spotImageRay[0]?.url)}></img>
+                    <img src={spotImageRay && (spotImageRay[4]?.url || spotImageRay[0]?.url)}></img>
                 </div>
             </div>
             <div className='singleSpotBottomThird'>
