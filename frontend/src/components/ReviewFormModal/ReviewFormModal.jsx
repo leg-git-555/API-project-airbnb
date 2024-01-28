@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react"
 import './ReviewFormModal.css'
 import { csrfFetch } from "../../store/csrf"
+import star from "../../star.ico"
 
 
 
@@ -52,12 +53,21 @@ export function ReviewFormModal({spotId}) {
                 placeholder="Leave your review here..."
                 onChange={e => setReview(e.target.value)}
             />
-            <input
+            {/* <input
                 type='number'
                 value={stars}
                 placeholder="rate 1 through 5 stars"
                 onChange={e => setStars(e.target.value)}
-            />
+            /> */}
+            <div className="mad-stars">
+                <img src={star} onMouseEnter={() => {setStars(1)}} className={stars >= 1 ? 'star-night' : 'k'}></img>
+                <img src={star} onMouseEnter={() => {setStars(2)}} className={stars >= 2 ? 'star-night' : 'k'}></img>
+                <img src={star} onMouseEnter={() => {setStars(3)}} className={stars >= 3 ? 'star-night' : 'k'}></img>
+                <img src={star} onMouseEnter={() => {setStars(4)}} className={stars >= 4 ? 'star-night' : 'k'}></img>
+                <img src={star} onMouseEnter={() => {setStars(5)}} className={stars >= 5 ? 'star-night' : 'k'}></img>
+                Stars
+            </div>
+                <div>{stars}</div>
             <button 
                 type="submit"
                 disabled={Object.keys(validations).length > 0}
