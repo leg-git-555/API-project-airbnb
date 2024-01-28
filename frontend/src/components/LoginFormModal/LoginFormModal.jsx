@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import * as sessionActions from '../../store/session';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
+import { login } from '../../store/session';
 import './LoginForm.css';
 
 function LoginFormModal() {
@@ -78,6 +79,12 @@ function LoginFormModal() {
         >
           Log In
         </button>
+        <div onClick={() => {
+              dispatch(login({credential: 'Declan-41', password: 'password2'}))
+              closeModal()
+              }}className='demo-user-login'>
+          Demo User
+        </div>
       </form>
     </div>
   );

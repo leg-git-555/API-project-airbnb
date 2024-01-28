@@ -39,7 +39,7 @@ export function Spots() {
                             </div>
                         </div>
 
-                        <div>
+                        <div className="price-per-night">
                             {`$${spot.price} night`}
                         </div>
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, createBrowserRouter, RouterProvider, useNavigate, NavLink } from 'react-router-dom';
 import LoginFormPage from './components/LoginFormPage';
 import SignupFormPage from './components/SignupFormPage';
-import Navigation from './components/Navigation/Navigation-bonus';
+// import Navigation from './components/Navigation/Navigation-bonus';
 import * as sessionActions from './store/session';
 import logo from './alien_favicon.ico'
 import { Spots } from './components/Spots/Spots';
@@ -39,7 +39,7 @@ function Layout() {
           <ProfileButton user={sessionUser} />
         </div>
       </div>
-      <Navigation isLoaded={isLoaded} />
+      {/* <Navigation isLoaded={isLoaded} /> */}
       {isLoaded && <Outlet />}
 
     </>
@@ -81,6 +81,10 @@ const router = createBrowserRouter([
       {
         path: '/spots/:id/edit',
         element: <UpdateSpot />
+      },
+      {
+        path: '*',
+        element: <h2>Page not found</h2>
       }
     ]
   }

@@ -49,3 +49,10 @@ div.header {
             margin-left: 20px;
             cursor: pointer;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ^^this is redundant but necessary bc Navigation.css wan't working */
+

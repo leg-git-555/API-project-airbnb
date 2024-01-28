@@ -4,7 +4,6 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
-import { login } from '../../store/session';
 import { useNavigate } from 'react-router-dom';
 
 function ProfileButton({ user }) {
@@ -72,9 +71,6 @@ function ProfileButton({ user }) {
               onItemClick={closeMenu}
               modalComponent={<SignupFormModal />}
             />
-            <button onClick={() => {
-              dispatch(login({credential: 'Bukayo-7', password: 'password'}))
-              }}>login as test user</button>
           </>
         )}
       </ul>
