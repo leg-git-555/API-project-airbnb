@@ -125,7 +125,7 @@ export function Spot() {
                                         <button>
                                             <OpenModalMenuItem
                                                 itemText="Delete"
-                                                modalComponent={<DeleteReviewModal reviewId={review.id}/>}
+                                                modalComponent={<DeleteReviewModal reviewId={review.id} spotId = {spotId}/>}
                                             />
                                         </button>}
                                     <br />

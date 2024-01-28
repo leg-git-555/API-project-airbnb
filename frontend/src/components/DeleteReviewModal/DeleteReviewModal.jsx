@@ -2,11 +2,12 @@ import { useDispatch } from "react-redux"
 import { useModal } from "../../context/Modal"
 import { csrfFetch } from "../../store/csrf"
 import { deleteReviewByIdAction } from "../../store/reviews"
+import { getSpotByIdThunk } from "../../store/spot"
 
 
 
 
-export function DeleteReviewModal({reviewId}) {
+export function DeleteReviewModal({reviewId, spotId}) {
     const {closeModal} = useModal()
     const dispatch = useDispatch()
 
@@ -17,6 +18,7 @@ export function DeleteReviewModal({reviewId}) {
             method: 'DELETE'
         })
         dispatch(deleteReviewByIdAction(reviewId))
+        dispatch(getSpotByIdThunk(spotId))
 
         closeModal()
     }
