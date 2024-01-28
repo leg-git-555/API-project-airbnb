@@ -7,6 +7,7 @@
     .singleSpotImageContainer > img {
         width: 45%;
         padding: 5px;
+        object-fit: cover;
     }
 
     .singleSpotImageContainerB {
@@ -26,8 +27,7 @@
         flex-direction: row;
         margin-top: 10px;
         align-self: center;
-        border-top: 3px solid rgb(184, 12, 144);
-        border-bottom: 3px solid rgb(184, 12, 144);
+        border-bottom: 3px solid grey;
     }
 
         .hostInfoSpotDescription {
@@ -39,12 +39,20 @@
 
     .calloutBox {
         /* border: 3px solid yellow; */
-        width: 50%;
+        width: 40%;
+        /* border: 2px solid grey; */
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        background-color: rgb(158, 245, 196);
+        margin-bottom: 10px;
     }
 
         .calloutBoxUpper {
             display: flex;
             align-items: baseline;
+            justify-content: space-around;
+            margin-bottom: 2%;
         }
 
             .starBox {

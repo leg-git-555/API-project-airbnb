@@ -14,7 +14,7 @@
         height: fit-content;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        /* align-items: center; */
         justify-content: center;
         margin: 10px;
         padding: 5px;
@@ -43,11 +43,14 @@
         .locationStars {
             display: flex;
             flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 2%;
         }
 
             .starContainer {
                 display: flex;
-                margin-left: 30px;
+                width: fit-content;
+                margin-right: 1%;
             }
 
                 .starContainer > img {
@@ -61,4 +64,8 @@
 
                .spotCard:hover > .tooltip {
                     visibility: visible;
+                }
+
+                .price-per-night {
+                    margin-bottom: 1%;
                 }

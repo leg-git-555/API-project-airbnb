@@ -49,3 +49,33 @@ div.header {
             margin-left: 20px;
             cursor: pointer;
         }
+
+        .my-profile-button {
+            position: relative;
+        }
+
+        .login-signup-dropdown {
+            /* margin-right: 100px; */
+            display: flex;
+            flex-direction: column;
+            width: 100px;
+            position: absolute;
+            right: 5px;
+            /* background-color: rgb(255, 216, 169); */
+            background-color: beige;
+        }
+
+            .login-signup-dropdown > * {
+                cursor: pointer;
+            }
+
+        .welcome-dropdown {
+            /* background-color: rgb(255, 216, 169); */
+            background-color: beige;
+            position: absolute;
+            right: 5px;
+        }
+
+            .welcome-dropdown > li > button {
+                cursor: pointer;
+            }

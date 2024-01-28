@@ -141,6 +141,7 @@ export function Spot() {
                     <div>
                         <div className='starBox'>
                             <img src={star}></img>
+                            New
                         </div>
                         {genBool && ownerBool && reviewBool &&
                             <button className='review-modal-container'>
