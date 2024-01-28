@@ -6,3 +6,10 @@
 .keep-button {
     background-color: darkgrey;
 }
+
+    .delete-button-container {
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }

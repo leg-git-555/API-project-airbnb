@@ -42,7 +42,7 @@ export function ManageSpots() {
                                 <div>{`${spot.city}, ${spot.state}`}</div>
                                 <div className="starContainer">
                                     <img src={star}></img>
-                                    {!isNaN(parseInt(spot.avgRating)) && <div>{`${spot.avgRating?.toFixed(1)}`}</div>}
+                                    {!isNaN(parseInt(spot.avgRating)) ? <div>{`${spot.avgRating?.toFixed(1)}`}</div> : <div>New</div>}
                                 </div>
 
                             </div>

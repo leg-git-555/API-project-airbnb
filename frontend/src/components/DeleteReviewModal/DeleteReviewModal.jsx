@@ -7,13 +7,13 @@ import { getSpotByIdThunk } from "../../store/spot"
 
 
 
-export function DeleteReviewModal({reviewId, spotId}) {
-    const {closeModal} = useModal()
+export function DeleteReviewModal({ reviewId, spotId }) {
+    const { closeModal } = useModal()
     const dispatch = useDispatch()
 
-    async function deleteClick () {
+    async function deleteClick() {
         const path = `/api/reviews/${reviewId}`
-        
+
         await csrfFetch(path, {
             method: 'DELETE'
         })
@@ -27,8 +27,10 @@ export function DeleteReviewModal({reviewId, spotId}) {
         <>
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to delete this review?</p>
-            <button className="delete-button" onClick={() => deleteClick()}>{`Yes (Delete Review)`}</button>
-            <button className="keep-button" onClick={() => closeModal()}>{`No (Keep Review)`}</button>
+            <div className="delete-button-container">
+                <button className="delete-button" onClick={() => deleteClick()}>{`Yes (Delete Review)`}</button>
+                <button className="keep-button" onClick={() => closeModal()}>{`No (Keep Review)`}</button>
+            </div>
         </>
     )
 }

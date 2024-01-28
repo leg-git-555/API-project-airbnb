@@ -56,3 +56,11 @@ div.header {
 
         /* ^^this is redundant but necessary bc Navigation.css wan't working */
 
+        .nav-link {
+            color: rgb(79, 165, 136);
+            cursor: pointer;
+        }
+
+        .nav-link.active {
+            color: pink;
+        }
