@@ -52,7 +52,7 @@ export function UpdateSpot() {
         if (price === '' || parseInt(price) <= 0) errorObj.price = 'Price is required'
 
         setValidations(errorObj)
-    }, [setValidations, spot, country, address, city, state, description, name, price ])
+    }, [setValidations, spot, country, address, city, state, description, name, price])
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -88,7 +88,7 @@ export function UpdateSpot() {
 
             <form
                 onSubmit={e => handleSubmit(e)}
-                className="update-spot-form"
+                className="create-spot-form"
             >
                 <h1>Update your Spot</h1>
                 <h3>{`Where's your place located?`}</h3>
@@ -121,7 +121,7 @@ export function UpdateSpot() {
                     />
                 </label>
                 {submitBool && validations.city && <p className='validation-error'>{validations.city}</p>}
-                <label>
+                <label className="form-bottom">
                     State
                     <input
                         type="text"
@@ -130,32 +130,33 @@ export function UpdateSpot() {
                     />
                 </label>
                 {submitBool && validations.state && <p className='validation-error'>{validations.state}</p>}
-                <p>------------------------------------------------------</p>
                 <h3>Describe your place to guests</h3>
-                <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</p>
+                <h4>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</h4>
+                <label className="form-bottom">
                     <textarea
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                     />
-                {submitBool && validations.description && <p className='validation-error'>{validations.description}</p>}
-                <p>------------------------------------------------------</p>
+                    {submitBool && validations.description && <p className='validation-error'>{validations.description}</p>}
+                </label>
                 <h3>Create a title for your spot</h3>
-                <p>Catch guests attention with a spot title that highlights what makes your place special.</p>
-                    <input 
-                        type="text"
-                        placeholder="Name of your spot"
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                    />
+                <h4>Catch guests' attention with a spot title that highlights what makes your place special</h4>
+                <label className="form-bottom">
+                <input
+                    type="text"
+                    placeholder="Name of your spot"
+                    value={name}
+                    onChange={e => setName(e.target.value)}
+                />
                 {submitBool && validations.name && <p className='validation-error'>{validations.name}</p>}
-                <p>------------------------------------------------------</p>
+                </label>
                 <h3>Set a base price for your spot</h3>
-                <p>Competitive pricing can help your listing stand out and rank higher in search results</p>
-                    <input 
-                        type="number"
-                        value={price}
-                        onChange={e => setPrice(e.target.value)}
-                    />
+                <h4>Competitive pricing can help your listing stand out and rank higher in search results</h4>
+                <input
+                    type="number"
+                    value={price}
+                    onChange={e => setPrice(e.target.value)}
+                />
                 {submitBool && validations.price && <p className='validation-error'>{validations.price}</p>}
                 <button>
                     Update your Spot
