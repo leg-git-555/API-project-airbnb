@@ -185,7 +185,7 @@ export const CreateSpot = () => {
                 <label className="form-bottom">
                     State
                     <input
-                        placeholder="STATE"
+                        placeholder="State"
                         type="text"
                         value={state}
                         onChange={e => setState(e.target.value)}
@@ -194,7 +194,7 @@ export const CreateSpot = () => {
                 </label>
 
                 <h3>Describe your place to guests</h3>
-                <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</p>
+                <h4>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood</h4>
                 <label className="form-bottom">
                     <textarea
                         placeholder="Please write at least 30 characters"
@@ -205,7 +205,7 @@ export const CreateSpot = () => {
                 </label>
 
                 <h3>Create a title for your spot</h3>
-                <p>Catch guests attention with a spot title that highlights what makes your place special.</p>
+                <h4>Catch guests' attention with a spot title that highlights what makes your place special</h4>
                 <label className="form-bottom">
                     <input
                         type="text"
@@ -216,7 +216,7 @@ export const CreateSpot = () => {
                     {submitBool && validations.name && <p className='validation-error'>{validations.name}</p>}
                 </label>
                 <h3>Set a base price for your spot</h3>
-                <p>Competitive pricing can help your listing stand out and rank higher in search results</p>
+                <h4>Competitive pricing can help your listing stand out and rank higher in search results</h4>
                 <label className="form-bottom">
                     <input
                         placeholder="Price per night (USD)"
@@ -227,7 +227,7 @@ export const CreateSpot = () => {
                 {submitBool && validations.price && <p className='validation-error'>{validations.price}</p>}
                 </label>
                 <h3>Liven up your spot with photos</h3>
-                <p>Submit a link to at least one photo to publish your spot.</p>
+                <h4>Submit a link to at least one photo to publish your spot</h4>
                 <input
                     type="text"
                     value={imageOne}

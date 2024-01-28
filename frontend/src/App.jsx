@@ -35,7 +35,7 @@ function Layout() {
           <h1>BnB</h1>
         </div>
         <div id='authButtonContainer'>
-          {sessionUser && <NavLink to="/spots/new">Create a New Spot</NavLink>}
+          {sessionUser && <NavLink to="/spots/new" className="nav-link">Create a New Spot</NavLink>}
           <ProfileButton user={sessionUser} />
         </div>
       </div>
