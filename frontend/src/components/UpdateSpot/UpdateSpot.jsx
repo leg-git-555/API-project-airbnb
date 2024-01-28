@@ -140,7 +140,7 @@ export function UpdateSpot() {
                     {submitBool && validations.description && <p className='validation-error'>{validations.description}</p>}
                 </label>
                 <h3>Create a title for your spot</h3>
-                <h4>Catch guests' attention with a spot title that highlights what makes your place special</h4>
+                <h4>{`Catch guests' attention with a spot title that highlights what makes your place special`}</h4>
                 <label className="form-bottom">
                 <input
                     type="text"

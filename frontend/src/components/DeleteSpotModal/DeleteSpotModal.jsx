@@ -30,7 +30,7 @@ export function DeleteSpotModal({ id }) {
         <>
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this spot from the listings?</p>
-            <div id="manage-spot-button-container">
+            <div className="delete-button-container">
                 <button className="delete-button" onClick={() => deleteClick()}>{`Yes (Delete Spot)`}</button>
                 <button className="keep-button" onClick={() => closeModal()}>{`No (Keep Spot)`}</button>
             </div>

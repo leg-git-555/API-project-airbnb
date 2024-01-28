@@ -7,7 +7,7 @@
     background-color: darkgrey;
 }
 
-    #manage-spot-button-container {
+    .delete-button-container {
         padding: 5px;
         display: flex;
         flex-direction: column;
