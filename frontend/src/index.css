@@ -50,32 +50,9 @@ div.header {
             cursor: pointer;
         }
 
-        .my-profile-button {
-            position: relative;
+        .hidden {
+            display: none;
         }
 
-        .login-signup-dropdown {
-            /* margin-right: 100px; */
-            display: flex;
-            flex-direction: column;
-            width: 100px;
-            position: absolute;
-            right: 5px;
-            /* background-color: rgb(255, 216, 169); */
-            background-color: beige;
-        }
+        /* ^^this is redundant but necessary bc Navigation.css wan't working */
 
-            .login-signup-dropdown > * {
-                cursor: pointer;
-            }
-
-        .welcome-dropdown {
-            /* background-color: rgb(255, 216, 169); */
-            background-color: beige;
-            position: absolute;
-            right: 5px;
-        }
-
-            .welcome-dropdown > li > button {
-                cursor: pointer;
-            }
