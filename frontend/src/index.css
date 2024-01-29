@@ -64,3 +64,11 @@ div.header {
         .nav-link.active {
             color: pink;
         }
+
+        #footer {
+            display: flex;
+            align-items: baseline;
+            height: 30px;
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }

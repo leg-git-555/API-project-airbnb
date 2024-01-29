@@ -46,6 +46,7 @@
         flex-direction: column;
         background-color: rgb(158, 245, 196);
         margin-bottom: 10px;
+        border-radius: 10px;
     }
 
         .calloutBoxUpper {
@@ -64,6 +65,11 @@
             .starBox > img {
                 height: 20px;
                 margin: 2px;
+            }
+
+            .reviewCard {
+                margin-top: 2%;
+                margin-left: 1%;
             }
 
             
