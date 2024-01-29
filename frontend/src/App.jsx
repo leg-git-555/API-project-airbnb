@@ -41,7 +41,11 @@ function Layout() {
       </div>
       {/* <Navigation isLoaded={isLoaded} /> */}
       {isLoaded && <Outlet />}
-
+      <div id='footer'>
+        <h6>
+        © 2024 Arsenal-bnb, Inc. DBA Alien BnB
+        </h6>
+        </div>
     </>
   );
 }
