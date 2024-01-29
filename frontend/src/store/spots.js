@@ -12,7 +12,7 @@ export const getSpots = (payload) => ({
 })
 
 export const deleteSpotAction = (payload) => {
-    console.log('inside action')
+   
     return {
         type: DELETE_SPOT,
         payload
@@ -45,7 +45,6 @@ export function spotsReducer (state = initialState, action) {
 
             return {...state, ...action.payload}
         } case DELETE_SPOT: {
-            console.log('inside reducer', action.payload, state)
             let newState = {...state}
             delete newState[action.payload]
             return newState

@@ -29,7 +29,7 @@ export const getCurrentSpotsThunk = () => async (dispatch) => {
     try {
         const res = await csrfFetch('/api/spots/current')
         let spots = await res.json()
-        console.log(spots)
+
         dispatch(getCurrentSpots(spots))
 
     } catch (err) {
