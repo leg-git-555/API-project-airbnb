@@ -15,7 +15,7 @@ export function Spot() {
     const dispatch = useDispatch()
     const { spotId } = useParams()
     const { spot } = useSelector(state => state.spot) //spot slice of state
-    let spotImageRay = spot.SpotImages //without coniditional in return statement, page breaks
+    let spotImageRay = spot.SpotImages //page breaks without conditional in return
     let { Reviews } = useSelector(state => state.reviews) //review slice of state
     const { user } = useSelector(state => state.session)
 
